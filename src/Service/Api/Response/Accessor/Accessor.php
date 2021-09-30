@@ -31,6 +31,18 @@ class Accessor implements AccessorInterface
     }
 
     /**
+     * Required for serialization (pre-cache processing)
+     */
+    public function __sleep(): array
+    {
+        $this->bxAttributes = new \ArrayIterator();
+        $this->accessorHandler = null;
+        $this->bxContent = null;
+
+        return ["accessorHandler", "bxAttributes", "bxContent"];
+    }
+
+    /**
      * Dynamically add properties to the object
      *
      * @param string $methodName
