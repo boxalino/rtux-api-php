@@ -303,7 +303,7 @@ abstract class ContextAbstract
     }
 
     /**
-     * @param string $facetPrefix
+     * @return string
      */
     public function getFacetPrefix(): string
     {
@@ -340,6 +340,15 @@ abstract class ContextAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $param
+     * @return string
+     */
+    public function getPropertyNameWithoutFacetPrefix(string $param) : string
+    {
+        return substr($param, strlen($this->getFacetPrefix()), strlen($param));
     }
 
 

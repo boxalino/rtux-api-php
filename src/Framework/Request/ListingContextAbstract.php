@@ -44,18 +44,19 @@ abstract class ListingContextAbstract
     {
         foreach($request->getParams() as $param => $values)
         {
-            //it`s a store property - has the allowed filters prefix
-            if(strpos((string)$param, $this->getFacetPrefix())===0)
+            if (in_array($param, array_column($this->getRangeProperties(), "from")))
             {
-                if (in_array($param, array_keys($this->getRangeProperties())))
-                {
-                    continue;
-                }
+                continue;
+            }
+
+            //it`s a store property - has the allowed filters prefix
+            if(strpos((string)$param, $this->getFacetPrefix()) === 0 )
+            {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
                 $values = array_map("html_entity_decode", $values);
                 $this->getApiRequest()->addFacets(
                     $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues(substr($param, strlen($this->getFacetPrefix()), strlen($param)), $values)
+                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix($param), $values)
                 );
             }
         }
@@ -73,15 +74,21 @@ abstract class ListingContextAbstract
     {
         foreach($this->getRangeProperties() as $propertyName=>$configurations)
         {
-            $from = (int) $request->getParam($configurations['from'], 0);
-            $to = (int) $request->getParam($configurations['to'], 0);
-            if($from > 0 || $to > 0)
+            try{
+                $from = (int) $request->getParam($configurations['from'], 0);
+                $to = (int) $request->getParam($configurations['to'], 0);
+                if($from > 0 || $to > 0)
+                {
+                    $this->getApiRequest()->addFacets(
+                        $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
+                            ->addRange($propertyName, $from, $to)
+                    );
+                }
+            } catch (\Throwable $exception)
             {
-                $this->getApiRequest()->addFacets(
-                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addRange($propertyName, $from, $to)
-                );
+                //do nothing, maybe an issue in definition of the range properties?
             }
+
         }
 
         return $this;
