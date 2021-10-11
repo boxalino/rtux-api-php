@@ -81,7 +81,7 @@ class ApiCallService implements ApiCallServiceInterface
             /** when a request is done in test mode - log the API request */
             if($apiRequest->isTest())
             {
-                $this->logger->info("Boxalino API request: " . $apiRequest->jsonSerialize());
+                $this->logger->alert("Boxalino API request: " . $apiRequest->jsonSerialize());
             }
 
             /** @var  \GuzzleHttp\Psr7\Response $response */
