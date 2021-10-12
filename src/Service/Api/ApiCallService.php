@@ -113,11 +113,10 @@ class ApiCallService implements ApiCallServiceInterface
     {
         if($apiRequest->isInspectMode())
         {
-            $widget = $apiRequest->getWidget();
+            $log = new Log();
+            $log->inspect($restApiEndpoint, $apiRequest, $this->getApiResponse());
 
-            header('BOXALINO_API_ENDPOINT_' . $widget .': '. $restApiEndpoint);
-            header('BOXALINO_API_REQUEST_'. $widget .': '. $apiRequest->setApiSecret("********************")->jsonSerialize());
-            header('BOXALINO_API_RESPONSE_'. $widget .': '. $this->getApiResponse()->getJson());
+            exit;
         }
 
         return $this;

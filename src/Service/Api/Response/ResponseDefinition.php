@@ -501,7 +501,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getJson() : string
     {
-        return $this->json;
+        return json_encode(json_decode($this->json), JSON_PRETTY_PRINT);
     }
 
     /**
