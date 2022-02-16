@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Request;
 
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\WrongDependencyTypeException;
 
 /**
  * Boxalino Listing Request handler
@@ -56,7 +55,7 @@ abstract class ListingContextAbstract
                 $values = array_map("html_entity_decode", $values);
                 $this->getApiRequest()->addFacets(
                     $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix($param), $values)
+                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix($param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey())
                 );
             }
         }
@@ -75,8 +74,8 @@ abstract class ListingContextAbstract
         foreach($this->getRangeProperties() as $propertyName=>$configurations)
         {
             try{
-                $from = (int) $request->getParam($configurations['from'], 0);
-                $to = (int) $request->getParam($configurations['to'], 0);
+                $from = (float) $request->getParam($configurations['from'], 0);
+                $to = (float) $request->getParam($configurations['to'], 0);
                 if($from > 0 || $to > 0)
                 {
                     $this->getApiRequest()->addFacets(
@@ -107,6 +106,39 @@ abstract class ListingContextAbstract
      * @return string
      */
     abstract public function getFilterValuesDelimiter() : string;
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function addFilterByFacetOptionId(bool $value) : ListingContextInterface
+    {
+        $this->useFilterByFacetOptionId = $value;
+        return $this;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function addFilterByFacetUrlKey(bool $value) : ListingContextInterface
+    {
+        $this->useFilterByUrlKey = $value;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getFacetValueKey() : ?string
+    {
+        if($this->useFilterByFacetOptionId)
+        {
+            return FacetDefinition::BOXALINO_REQUEST_FACET_VALUEKEY;
+        }
+
+        return null;
+    }
 
 
 }

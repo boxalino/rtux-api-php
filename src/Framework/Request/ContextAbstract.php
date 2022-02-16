@@ -1,14 +1,12 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Request;
 
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
 
 /**
  * Class ContextAbstract
@@ -69,6 +67,16 @@ abstract class ContextAbstract
      * @var null
      */
     protected $facetPrefix = null;
+
+    /**
+     * @var bool
+     */
+    protected $useFilterByFacetOptionId = false;
+
+    /**
+     * @var bool
+     */
+    protected $useFilterByUrlKey = false;
 
     /**
      * Listing constructor.

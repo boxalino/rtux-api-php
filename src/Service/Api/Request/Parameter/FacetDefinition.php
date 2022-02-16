@@ -20,6 +20,8 @@ class FacetDefinition extends ParameterDefinition
 
     CONST BOXALINO_REQUEST_FACET_SORT_COUNT = "1";
     CONST BOXALINO_REQUEST_FACET_SORT_ALPHABET = "2";
+    CONST BOXALINO_REQUEST_FACET_VALUE_CORRELATION_EXTRAINFO = "facetValueExtraInfo";
+    CONST BOXALINO_REQUEST_FACET_VALUEKEY = "id";
 
     /**
      * @param string $field
@@ -69,12 +71,13 @@ class FacetDefinition extends ParameterDefinition
      * @param string $field
      * @param int $maxCount
      * @param int $minPopulation
+     * @param string|null $facetValueCorrelation
      * @param string $sort
      * @param bool $sortAscending
      * @param bool $andSelectedValues
-     * @return FacetDefinition
+     * @return $this
      */
-    public function add(string $field, int $maxCount, int $minPopulation, string $sort = self::BOXALINO_REQUEST_FACET_SORT_COUNT, bool $sortAscending = false, bool $andSelectedValues = false) : self
+    public function add(string $field, int $maxCount = 1, int $minPopulation = 1, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_EXTRAINFO, string $sort = self::BOXALINO_REQUEST_FACET_SORT_COUNT, bool $sortAscending = false, bool $andSelectedValues = false) : self
     {
         $this->field = $field;
         $this->maxCount = $maxCount;
@@ -86,8 +89,20 @@ class FacetDefinition extends ParameterDefinition
         }
         $this->sortAscending = $sortAscending;
         $this->andSelectedValues = $andSelectedValues;
+        $this->addExtraInfo("facet-value-correlation", $facetValueCorrelation);
 
         return $this;
     }
+
+    /**
+     * @param string $key
+     * @param string $value
+     * @return void
+     */
+    public function addExtraInfo(string $key, string $value) : void
+    {
+        $this->extraInfo[$key] = $value;
+    }
+
 
 }
