@@ -18,13 +18,27 @@ trait ApiPropertyTrait
     public function getSelectedFacetsByRequest(RequestInterface $request)
     {
         $facets = [];
+        $position = 0;
+        $hasFacetPrefix = false;
+        if($this->getFacetPrefix())
+        {
+            $hasFacetPrefix = true;
+            $position = strlen($this->getFacetPrefix());
+        }
+
         foreach($request->getParams() as $param => $values)
         {
             //it`s a store property - has the allowed filters prefix
-            if(strpos($param, $this->getFacetPrefix()) === 0)
-            {
-                $facets[] = substr($param, strlen($this->getFacetPrefix()), strlen($param));
+            if ($hasFacetPrefix) {
+                if (strpos($param, $this->getFacetPrefix()) === 0)
+                {
+                    $facets[] = substr($param, $position, strlen($param));
+                }
+
+                continue;
             }
+
+            $facets[] = $param;
         }
 
         return $facets;
