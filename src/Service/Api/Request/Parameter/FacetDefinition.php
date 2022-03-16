@@ -30,12 +30,13 @@ class FacetDefinition extends ParameterDefinition
      * @param string|null $valueKey
      * @return FacetDefinition
      */
-    public function addWithValues(string $field, array $values, bool $urlField = false, ?string $valueKey = null) : self
+    public function addWithValues(string $field, array $values, bool $urlField = false, ?string $valueKey = null, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_EXTRAINFO) : self
     {
         $this->field = $field;
         $this->urlField = $urlField;
         $this->values = $values;
         $this->valueKey = $valueKey;
+        $this->addExtraInfo("facet-value-correlation", $facetValueCorrelation);
 
         return $this;
     }
