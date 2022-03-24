@@ -82,7 +82,7 @@ class ApiBasePage implements ApiResponseViewInterface
      */
     public function getBlocks() : \ArrayIterator
     {
-        return $this->blocks;
+        return $this->blocks ?? new \ArrayIterator();
     }
 
     /**
