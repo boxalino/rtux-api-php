@@ -382,7 +382,7 @@ class RequestDefinition implements RequestDefinitionInterface
      */
     public function getQuery() : string
     {
-        return $this->query;
+        return strip_tags($this->query);
     }
 
     /**
@@ -391,7 +391,7 @@ class RequestDefinition implements RequestDefinitionInterface
      */
     public function setQuery(string $query) : self
     {
-        $this->query = $query;
+        $this->query = strip_tags($query);
         return $this;
     }
 
