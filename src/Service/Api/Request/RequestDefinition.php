@@ -522,6 +522,16 @@ class RequestDefinition implements RequestDefinitionInterface
             {
                 if($parameterValue[0] === $this->getApiKey())
                 {
+                    if(in_array(RequestDefinitionInterface::BOXALINO_API_WIDGET_INSPECT_FLAG, array_keys($this->getParameters())))
+                    {
+                        $widgetToInspect = $this->getParameters()[RequestDefinitionInterface::BOXALINO_API_WIDGET_INSPECT_FLAG][0];
+                        if($widgetToInspect === $this->getWidget())
+                        {
+                            return true;
+                        }
+
+                        return false;
+                    }
                     return true;
                 }
             }

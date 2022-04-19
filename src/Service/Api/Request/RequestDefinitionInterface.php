@@ -22,6 +22,11 @@ interface RequestDefinitionInterface extends \JsonSerializable
     public const BOXALINO_API_REQUEST_INSPECT_FLAG="_bx_inspect_key";
 
     /**
+     * URL parameter to alert for an inspect request on a given widget
+     */
+    public const BOXALINO_API_WIDGET_INSPECT_FLAG="_bx_inspect_widget";
+
+    /**
      * @param FilterDefinition ...$filterDefinitions
      * @return $this
      */
