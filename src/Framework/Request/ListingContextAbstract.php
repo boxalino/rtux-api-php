@@ -55,7 +55,7 @@ abstract class ListingContextAbstract
                 $values = array_map("html_entity_decode", $values);
                 $this->getApiRequest()->addFacets(
                     $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix($param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey())
+                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix($param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey(), $this->getFacetValueCorrelation())
                 );
             }
         }

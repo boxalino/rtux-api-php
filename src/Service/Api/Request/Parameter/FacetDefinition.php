@@ -21,6 +21,7 @@ class FacetDefinition extends ParameterDefinition
     CONST BOXALINO_REQUEST_FACET_SORT_COUNT = "1";
     CONST BOXALINO_REQUEST_FACET_SORT_ALPHABET = "2";
     CONST BOXALINO_REQUEST_FACET_VALUE_CORRELATION_EXTRAINFO = "facetValueExtraInfo";
+    CONST BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX = "rtux-data-integration_facetValueExtraInfo";
     CONST BOXALINO_REQUEST_FACET_VALUEKEY = "id";
 
     /**
@@ -30,7 +31,7 @@ class FacetDefinition extends ParameterDefinition
      * @param string|null $valueKey
      * @return FacetDefinition
      */
-    public function addWithValues(string $field, array $values, bool $urlField = false, ?string $valueKey = null, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_EXTRAINFO) : self
+    public function addWithValues(string $field, array $values, bool $urlField = false, ?string $valueKey = null, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX) : self
     {
         $this->field = $field;
         $this->urlField = $urlField;
@@ -78,7 +79,7 @@ class FacetDefinition extends ParameterDefinition
      * @param bool $andSelectedValues
      * @return $this
      */
-    public function add(string $field, int $maxCount = 1, int $minPopulation = 1, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_EXTRAINFO, string $sort = self::BOXALINO_REQUEST_FACET_SORT_COUNT, bool $sortAscending = false, bool $andSelectedValues = false) : self
+    public function add(string $field, int $maxCount = -1, int $minPopulation = 1, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX, string $sort = self::BOXALINO_REQUEST_FACET_SORT_COUNT, bool $sortAscending = false, bool $andSelectedValues = false) : self
     {
         $this->field = $field;
         $this->maxCount = $maxCount;

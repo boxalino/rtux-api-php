@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Request;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
@@ -77,6 +78,11 @@ abstract class ContextAbstract
      * @var bool
      */
     protected $useFilterByUrlKey = false;
+
+    /**
+     * @var null | string
+     */
+    protected $facetValueCorrelation = null;
 
     /**
      * Listing constructor.
@@ -316,6 +322,24 @@ abstract class ContextAbstract
     public function getFacetPrefix(): string
     {
         return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacetValueCorrelation(): string
+    {
+        return $this->facetValueCorrelation ?? FacetDefinition::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX;
+    }
+
+    /**
+     * @param string|null $facetValueCorrelation
+     * @return ContextAbstract
+     */
+    public function setFacetValueCorrelation(?string $facetValueCorrelation): ContextAbstract
+    {
+        $this->facetValueCorrelation = $facetValueCorrelation;
+        return $this;
     }
 
     /**
