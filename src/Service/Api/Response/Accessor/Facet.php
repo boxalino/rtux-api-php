@@ -239,6 +239,76 @@ class Facet extends Accessor
     }
 
     /**
+     * Apply a natural sort for the facet
+     *
+     * @return void
+     */
+    protected function _natsortFacetValues() : void
+    {
+        $sortedValues = new \ArrayIterator();
+        /** add a natsort for facet values */
+        if($this->getValueorderEnums() === "natural")
+        {
+            $facetValuesByKey = [];
+            array_map(function(AccessorInterface $facetValue) use (&$facetValuesByKey) {
+                $facetValuesByKey[$facetValue->getValue()] = $facetValue;
+            }, $this->getValues()->getArrayCopy());
+
+            ksort($facetValuesByKey, SORT_NATURAL);
+            foreach($facetValuesByKey as $key => $facetValue)
+            {
+                $sortedValues->append($facetValue);
+            }
+
+            $this->values = $sortedValues;
+        }
+    }
+
+    /**
+     * Sort facet options based on the configured sort_order key (if provided in the doc_attribute_value export)
+     * NOTE: If there is no sort_order configured, the facet options will be added at the end of the list
+     *
+     * @return void
+     */
+    protected function _storeSortFacetValues() : void
+    {
+        $sortedValues = new \ArrayIterator();
+        /** sort based on store_order attribute */
+        if($this->getValueorderEnums() === "store")
+        {
+            $facetValuesByKey = []; $facetValuesNoKey = [];
+            array_map(function(AccessorInterface $facetValue) use (&$facetValuesByKey, &$facetValuesNoKey) {
+                if($facetValue->get("sort_order"))
+                {
+                    $sortOrder = $facetValue->get("sort_order")[0];
+                    if(is_null($sortOrder))
+                    {
+                        $facetValuesNoKey[] = $facetValue;
+                        return;
+                    }
+                    $facetValuesByKey[$sortOrder] = $facetValue;
+                }
+            }, $this->getValues()->getArrayCopy());
+
+            if(count($facetValuesByKey))
+            {
+                ksort($facetValuesByKey, SORT_NUMERIC);
+                foreach($facetValuesByKey as $key => $facetValue)
+                {
+                    $sortedValues->append($facetValue);
+                }
+
+                foreach($facetValuesNoKey as $facetValue)
+                {
+                    $sortedValues->append($facetValue);
+                }
+
+                $this->values = $sortedValues;
+            }
+        }
+    }
+
+    /**
      * @return bool
      */
     public function isAndSelectedValues(): bool
@@ -343,6 +413,9 @@ class Facet extends Accessor
     public function setValueorderEnums(string $valueorderEnums): Facet
     {
         $this->valueorderEnums = $valueorderEnums;
+        $this->_natsortFacetValues();
+        $this->_storeSortFacetValues();
+
         return $this;
     }
 

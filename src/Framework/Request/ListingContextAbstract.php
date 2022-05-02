@@ -128,6 +128,16 @@ abstract class ListingContextAbstract
     }
 
     /**
+     * @param string $value
+     * @return $this
+     */
+    public function addFilterByFacetValueKey(string $value) : ListingContextInterface
+    {
+        $this->facetValueKeyFilter = $value;
+        return $this;
+    }
+
+    /**
      * @return string|null
      */
     protected function getFacetValueKey() : ?string
@@ -137,7 +147,7 @@ abstract class ListingContextAbstract
             return FacetDefinition::BOXALINO_REQUEST_FACET_VALUEKEY;
         }
 
-        return null;
+        return $this->facetValueKeyFilter;
     }
 
 

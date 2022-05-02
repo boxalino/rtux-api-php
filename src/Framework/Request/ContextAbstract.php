@@ -82,6 +82,11 @@ abstract class ContextAbstract
     /**
      * @var null | string
      */
+    protected $facetValueKeyFilter = null;
+
+    /**
+     * @var null | string
+     */
     protected $facetValueCorrelation = null;
 
     /**
@@ -317,9 +322,9 @@ abstract class ContextAbstract
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getFacetPrefix(): string
+    public function getFacetPrefix(): ?string
     {
         return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
     }
@@ -380,7 +385,12 @@ abstract class ContextAbstract
      */
     public function getPropertyNameWithoutFacetPrefix(string $param) : string
     {
-        return substr($param, strlen($this->getFacetPrefix()), strlen($param));
+        if($this->getFacetPrefix())
+        {
+            return substr($param, strlen($this->getFacetPrefix()), strlen($param));
+        }
+
+        return $param;
     }
 
 

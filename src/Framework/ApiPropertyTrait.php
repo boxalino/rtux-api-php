@@ -89,9 +89,9 @@ trait ApiPropertyTrait
     }
 
     /**
-     * @param string $facetPrefix
+     * @param string | null $facetPrefix
      */
-    abstract public function getFacetPrefix(): string;
+    abstract public function getFacetPrefix(): ?string;
 
 
 }
