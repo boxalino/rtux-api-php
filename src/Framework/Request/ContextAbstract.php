@@ -72,6 +72,11 @@ abstract class ContextAbstract
     /**
      * @var bool
      */
+    protected $useCategoriesFilter = false;
+
+    /**
+     * @var bool
+     */
     protected $useFilterByFacetOptionId = false;
 
     /**

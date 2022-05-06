@@ -70,6 +70,11 @@ class FacetValue extends Accessor
     protected $minSelectedValue = null;
 
     /**
+     * @var array
+     */
+    protected $path = [];
+
+    /**
      * @return string
      */
     public function getValue(): ?string
@@ -266,5 +271,24 @@ class FacetValue extends Accessor
         $this->minSelectedValue = $minSelectedValue;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getPath(): array
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param array $path
+     * @return FacetValue
+     */
+    public function setPath(array $path): FacetValue
+    {
+        $this->path = $path;
+        return $this;
+    }
+
 
 }

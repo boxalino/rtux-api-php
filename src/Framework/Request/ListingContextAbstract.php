@@ -29,6 +29,7 @@ abstract class ListingContextAbstract
         parent::get($request);
         $this->addFacets($request);
         $this->addRangeFacets($request);
+        $this->addCategoryFacet($request);
 
         return $this->getApiRequest();
     }
@@ -94,6 +95,25 @@ abstract class ListingContextAbstract
     }
 
     /**
+     * Adding the categories facet to the API request
+     *
+     * @param RequestInterface $request
+     * @return ListingContextAbstract
+     */
+    public function addCategoryFacet(RequestInterface $request) : ListingContextAbstract
+    {
+        if($this->useCategoriesFilter)
+        {
+            $this->getApiRequest()->addFacets(
+                $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
+                    ->add("categories", -1, 1, $this->getFacetValueCorrelation())
+            );
+        }
+
+        return $this;
+    }
+
+    /**
      * Range properties definition as used in the projects
      *
      * @return array
@@ -134,6 +154,16 @@ abstract class ListingContextAbstract
     public function addFilterByFacetValueKey(string $value) : ListingContextInterface
     {
         $this->facetValueKeyFilter = $value;
+        return $this;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function addCategoriesFilter(bool $value) : ListingContextInterface
+    {
+        $this->useCategoriesFilter = $value;
         return $this;
     }
 
