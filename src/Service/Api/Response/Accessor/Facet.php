@@ -648,10 +648,10 @@ class Facet extends Accessor
     }
 
     /**
-     * @param string $prefix
+     * @param string | null $prefix
      * @return $this
      */
-    public function setFieldPrefix(string $prefix) : Facet
+    public function setFieldPrefix(?string $prefix = null) : Facet
     {
         $this->fieldPrefix = $prefix;
         return $this;

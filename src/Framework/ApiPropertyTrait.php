@@ -19,26 +19,24 @@ trait ApiPropertyTrait
     {
         $facets = [];
         $position = 0;
-        $hasFacetPrefix = false;
         if($this->getFacetPrefix())
         {
-            $hasFacetPrefix = true;
             $position = strlen($this->getFacetPrefix());
         }
 
         foreach($request->getParams() as $param => $values)
         {
-            //it`s a store property - has the allowed filters prefix
-            if ($hasFacetPrefix) {
-                if (strpos($param, $this->getFacetPrefix()) === 0)
-                {
-                    $facets[] = substr($param, $position, strlen($param));
-                }
-
+            //it`s a Boxalino property - has the allowed filters prefix
+            if (strpos($param, $this->getFacetPrefix()) === 0)
+            {
+                $facets[] = substr($param, $position, strlen($param));
                 continue;
             }
 
-            $facets[] = $param;
+            if(in_array($param, $this->getFilterablePropertyNames()))
+            {
+                $facets[] = $param;
+            }
         }
 
         return $facets;
@@ -92,6 +90,11 @@ trait ApiPropertyTrait
      * @param string | null $facetPrefix
      */
     abstract public function getFacetPrefix(): ?string;
+
+    /**
+     * @return array
+     */
+    abstract public function getFilterablePropertyNames() : array;
 
 
 }

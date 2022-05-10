@@ -95,6 +95,11 @@ abstract class ContextAbstract
     protected $facetValueCorrelation = null;
 
     /**
+     * @var string | null
+     */
+    protected $diFieldPrefix = null;
+
+    /**
      * Listing constructor.
      *
      * @param RequestTransformerInterface $requestTransformer
@@ -331,7 +336,7 @@ abstract class ContextAbstract
      */
     public function getFacetPrefix(): ?string
     {
-        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
+        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_SYSTEM_FACET_PREFIX;
     }
 
     /**
@@ -392,10 +397,28 @@ abstract class ContextAbstract
     {
         if($this->getFacetPrefix())
         {
-            return substr($param, strlen($this->getFacetPrefix()), strlen($param));
+            if (strpos($param, $this->getFacetPrefix()) === 0)
+            {
+                return substr($param, strlen($this->getFacetPrefix()), strlen($param));
+            }
         }
 
-        return $param;
+        if(is_null($this->diFieldPrefix))
+        {
+            return $param;
+        }
+
+        return $this->diFieldPrefix . $param;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function addDiFieldPrefix(string $value) : self
+    {
+        $this->diFieldPrefix = $value;
+        return $this;
     }
 
 

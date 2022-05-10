@@ -118,7 +118,10 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
         foreach($facets as $facet)
         {
             $facet = $this->toObject($facet, $this->getAccessorHandler()->getAccessor("facet"));
-            $facet->setFieldPrefix($this->getFacetPrefix());
+            if($this->facetRequiresPrefix($facet))
+            {
+                $facet->setFieldPrefix($this->getFacetPrefix());
+            }
             $label = $facet->getLabel();
             if(!$label || empty($label))
             {
@@ -134,6 +137,15 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
 
         return $this;
     }
+
+    /**
+     * Check that the facet is a store/e-shop property
+     * If it is not a store property - the prefix must be added
+     *
+     * @param $facet
+     * @return bool
+     */
+    abstract protected function facetRequiresPrefix($facet) : bool;
 
     /**
      * @param AccessorInterface $facet
@@ -194,11 +206,11 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getFacetPrefix(): string
+    public function getFacetPrefix(): ?string
     {
-        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
+        return $this->facetPrefix;
     }
 
     /**
@@ -217,7 +229,7 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     public function load(): void
     {
         $this->_loadAccessors();
-        $this->loadPropertiesToObject($this, [], ["getLabel", "addSelectedFacet", "getByPosition", "getFacetsPrefix", "_loadAccessors"], true);
+        $this->loadPropertiesToObject($this, [], ["getLabel", "addSelectedFacet", "getByPosition", "getFacetsPrefix", "_loadAccessors", "facetRequiresPrefix"], true);
     }
 
     /**

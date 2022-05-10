@@ -49,8 +49,18 @@ abstract class ListingContextAbstract
                 continue;
             }
 
-            //it`s a store property - has the allowed filters prefix
-            if(strpos((string)$param, $this->getFacetPrefix()) === 0 )
+            if(in_array($param, $this->getSystemParameters()))
+            {
+                continue;
+            }
+
+            //it`s a store property or has the allowed filters prefix
+            $allowedAsFilter = in_array($param, $this->getFilterablePropertyNames());
+            if(strpos((string)$param, $this->getFacetPrefix()) === 0)
+            {
+                $allowedAsFilter = true;
+            }
+            if($allowedAsFilter)
             {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
                 $values = array_map("html_entity_decode", $values);
@@ -88,7 +98,6 @@ abstract class ListingContextAbstract
             {
                 //do nothing, maybe an issue in definition of the range properties?
             }
-
         }
 
         return $this;
@@ -122,10 +131,18 @@ abstract class ListingContextAbstract
 
     /**
      * Delimiter for the filter values in the URL
+     * RULE: must be the same as the one used in facet model (if exists)
      *
      * @return string
      */
     abstract public function getFilterValuesDelimiter() : string;
+
+    /**
+     * Environment-specific generic request properties (ex: sorting, page nr, limit, etc)
+     *
+     * @return array
+     */
+    abstract public function getSystemParameters() : array;
 
     /**
      * @param bool $value
@@ -168,6 +185,7 @@ abstract class ListingContextAbstract
     }
 
     /**
+     * Returns the configured valueKey for the integration use-case
      * @return string|null
      */
     protected function getFacetValueKey() : ?string
@@ -179,6 +197,11 @@ abstract class ListingContextAbstract
 
         return $this->facetValueKeyFilter;
     }
+
+    /**
+     * @return array
+     */
+    abstract public function getFilterablePropertyNames() : array;
 
 
 }
