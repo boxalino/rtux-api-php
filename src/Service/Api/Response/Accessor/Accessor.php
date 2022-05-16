@@ -106,6 +106,19 @@ class Accessor implements AccessorInterface
     }
 
     /**
+     * Sets either accessor objects or accessor fields to the response object
+     *
+     * @param string $propertyName
+     * @param $content
+     * @return $this
+     */
+    public function add(string $propertyName, $content)
+    {
+        $this->$propertyName[] = $content;
+        return $this;
+    }
+
+    /**
      * @return AccessorHandlerInterface
      */
     public function getAccessorHandler(): AccessorHandlerInterface

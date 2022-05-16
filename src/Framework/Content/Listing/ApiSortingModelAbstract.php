@@ -26,6 +26,13 @@ abstract class ApiSortingModelAbstract
     protected $sortings = [];
 
     /**
+     * List of key->field for available secondary sortings (framework-dependent)
+     *
+     * @var []
+     */
+    protected $additionalSortings = [];
+
+    /**
      * @var \ArrayObject
      */
     protected $sortingMapRequest;
@@ -34,6 +41,16 @@ abstract class ApiSortingModelAbstract
      * @var \ArrayObject
      */
     protected $sortingMapResponse;
+
+    /**
+     * @var \ArrayObject
+     */
+    protected $additionalSortingMapResponse;
+
+    /**
+     * @var \ArrayObject
+     */
+    protected $additionalSortingMapRequest;
 
     /**
      * Current sorting (as set via Boxalino API response)
@@ -48,6 +65,8 @@ abstract class ApiSortingModelAbstract
     {
         $this->sortingMapRequest = new \ArrayObject();
         $this->sortingMapResponse = new \ArrayObject();
+        $this->additionalSortingMapResponse = new \ArrayObject();
+        $this->additionalSortingMapRequest = new \ArrayObject();
     }
 
     /**
@@ -102,6 +121,23 @@ abstract class ApiSortingModelAbstract
     }
 
     /**
+     * Adds additional sorting options linked to a selected sorting option
+     * (explicit structure)
+     *
+     * @param array $additionalSortingList
+     * @return $this
+     */
+    public function addAdditionalSortingOptionCollection(array $additionalSortingList) : self
+    {
+        foreach($additionalSortingList as $field => $sortDefinition)
+        {
+            $this->additionalSortings[$field] = new ApiSortingOption($sortDefinition);
+        }
+
+        return $this;
+    }
+
+    /**
      * Retrieving the declared Boxalino field linked to e-shop sorting declaration
      *
      * @param string $field
@@ -114,7 +150,7 @@ abstract class ApiSortingModelAbstract
             return $this->sortingMapRequest->offsetGet($field);
         }
 
-        throw new MissingDependencyException("BoxalinoApiSorting: The required request field does not have a sorting mapping.");
+        throw new MissingDependencyException("BoxalinoApiSorting: The required request field $field does not have a sorting mapping.");
     }
 
     /**
@@ -130,7 +166,7 @@ abstract class ApiSortingModelAbstract
             return $this->sortingMapResponse->offsetGet($field);
         }
 
-        throw new MissingDependencyException("BoxalinoApiSorting: The required response field does not have a sorting mapping.");
+        throw new MissingDependencyException("BoxalinoApiSorting: The required response field $field does not have a sorting mapping.");
     }
 
     /**
@@ -190,6 +226,14 @@ abstract class ApiSortingModelAbstract
                 "field" => $this->get($key)->getApiField(),
                 "reverse" => $this->get($key)->isReverse()
             ];
+
+            if($this->hasAdditional($key))
+            {
+                $requestedSortingList[] = [
+                    "field" => $this->getAdditional($key)->getApiField(),
+                    "reverse" => $this->getAdditional($key)->isReverse()
+                ];
+            }
         }
 
         return $requestedSortingList;
@@ -232,6 +276,18 @@ abstract class ApiSortingModelAbstract
     }
 
     /**
+     * Accessing the additional sorting configured for a key
+     * (local system standard)
+     *
+     * @param string $key
+     * @return ApiSortingOption | null | mixed
+     */
+    public function getAdditional(string $key)
+    {
+        return $this->additionalSortings[$key] ?? null;
+    }
+
+    /**
      * Check if a sorting rule key has been declared for local e-shop
      *
      * @param string $key
@@ -240,6 +296,17 @@ abstract class ApiSortingModelAbstract
     public function has(string $key): bool
     {
         return isset($this->sortings[$key]);
+    }
+
+    /**
+     * Check if a sorting rule key has been declared for additional enhancement
+     *
+     * @param string $key
+     * @return bool
+     */
+    public function hasAdditional(string $key): bool
+    {
+        return isset($this->additionalSortings[$key]);
     }
 
     /**
@@ -280,7 +347,18 @@ abstract class ApiSortingModelAbstract
      */
     public function addAccessorContext(?AccessorInterface $context = null): AccessorModelInterface
     {
-        $this->setActiveSorting($context->getBxSort());
+        $sortingOptions = $context->getBxSort();
+        foreach($sortingOptions as $sortingOption)
+        {
+            /** do not disclose the additional sorting fields */
+            if(in_array($sortingOption->getField(), array_merge(array_keys($this->additionalSortings),["score"])))
+            {
+                continue;
+            }
+
+            $this->setActiveSorting($sortingOption);
+        }
+
         return $this;
     }
 

@@ -28,6 +28,15 @@ interface AccessorInterface
     public function get(string $parameterName);
 
     /**
+     * Sets either accessor objects or accessor fields to the response object
+     *
+     * @param string $propertyName
+     * @param $content
+     * @return $this
+     */
+    public function add(string $propertyName, $content);
+
+    /**
      * Access the Boxalino response attributes for API JS tracker
      *
      * @return \ArrayIterator
