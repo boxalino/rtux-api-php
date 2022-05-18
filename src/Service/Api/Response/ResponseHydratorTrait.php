@@ -69,6 +69,19 @@ trait ResponseHydratorTrait
 
                 if(is_array($value))
                 {
+                    /** the bx-sort is returned as a list/[] instead of a model itself */
+                    if($propertyName === 'bx-sort')
+                    {
+                        foreach($value as $valueOption)
+                        {
+                            $handler = $this->getAccessorHandler()->getAccessor($propertyName);
+                            $valueObject = $this->toObject($valueOption, $handler);
+                            $object->add($objectProperty, $valueObject);
+                        }
+
+                        continue;
+                    }
+
                     $value = array_pop($value);
                 }
                 $valueObject = $this->toObject($value, $handler);

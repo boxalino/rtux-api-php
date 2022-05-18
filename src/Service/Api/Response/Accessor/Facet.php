@@ -226,7 +226,7 @@ class Facet extends Accessor
      */
     public function setValues(array $values): Facet
     {
-        if($this->getField() === self::RTUX_API_FACET_CATEGORY)
+        if(in_array($this->getField(), [self::RTUX_API_FACET_CATEGORY, self::RTUX_API_FACET_CATEGORIES]))
         {
             return $this->_setValuesHierarchical($values);
         }

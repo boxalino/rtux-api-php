@@ -63,11 +63,6 @@ trait FacetHierarchicalTrait
             $facetValueEntity = $this->toObject($value, $this->getAccessorHandler()->getAccessor("facetValue"));
             $facetValueEntity->setId([$facetValueEntity->getValue()]);
             $facetValueEntity->set("level", $level);
-            if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
-                if ($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize()) {
-                    $facetValueEntity->setShow(false);
-                }
-            }
 
             $this->values->append($facetValueEntity);
         }
@@ -96,8 +91,15 @@ trait FacetHierarchicalTrait
             }, $this->getValues()->getArrayCopy());
 
             ksort($facetValuesByKey, SORT_NATURAL);
+            $index = 0;
             foreach($facetValuesByKey as $key => $facetValue)
             {
+                $index++;
+                if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
+                    if ($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize()) {
+                        $facetValue->setShow(false);
+                    }
+                }
                 $sortedValues->append($facetValue);
             }
 
