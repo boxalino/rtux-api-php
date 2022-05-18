@@ -190,7 +190,7 @@ abstract class ApiSortingModelAbstract
     {
         try {
             return $this->activeSorting->getField() ?? $this->getDefaultSortField();
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             return $this->getDefaultSortField();
         }
@@ -205,7 +205,7 @@ abstract class ApiSortingModelAbstract
     {
         try {
             return $this->activeSorting->getReverse() ? ApiSortingModelInterface::SORT_DESCENDING : ApiSortingModelInterface::SORT_ASCENDING;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return $this->getDefaultSortDirection();
         }
