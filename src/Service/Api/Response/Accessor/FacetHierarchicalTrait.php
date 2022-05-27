@@ -214,5 +214,29 @@ trait FacetHierarchicalTrait
         return (string)key($levels);
     }
 
+    /**
+     * @param string $field
+     * @return string
+     */
+    protected function _apiMapField(string $field) : string
+    {
+        if(in_array($field, array_keys($this->_getAlternativeFacetMapping())))
+        {
+            return $this->_getAlternativeFacetMapping()[$field];
+        }
+
+        return $field;
+    }
+
+    /**
+     * A list of API properties that have alternatives
+     * (ex: categories)
+     *
+     * @return string[]
+     */
+    protected function _getAlternativeFacetMapping() : array
+    {
+        return [Facet::RTUX_API_FACET_CATEGORIES => Facet::RTUX_API_FACET_CATEGORY];
+    }
 
 }
