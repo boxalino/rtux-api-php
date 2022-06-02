@@ -39,7 +39,7 @@ trait ResponseHydratorTrait
             /**
              * accessor are informative Boxalino system variables which have no value to the integration system
              */
-            if($value === ['accessor'] || $value === "accessor")
+            if($value === [AccessorInterface::BOXALINO_API_ACCESSOR_PARAMETER] || $value === AccessorInterface::BOXALINO_API_ACCESSOR_PARAMETER)
             {
                 continue;
             }
