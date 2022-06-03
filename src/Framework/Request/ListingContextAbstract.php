@@ -49,8 +49,8 @@ abstract class ListingContextAbstract
                 continue;
             }
 
-            //it`s a store property - has the allowed filters prefix
-            if(strpos((string)$param, $this->getFacetPrefix()) === 0 )
+            //it`s a store property or has the allowed filters prefix
+            if($this->isParamAllowedAsFilter($param))
             {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
                 $values = array_map("html_entity_decode", $values);
@@ -111,6 +111,25 @@ abstract class ListingContextAbstract
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $param
+     * @return bool
+     */
+    protected function isParamAllowedAsFilter(string $param)
+    {
+        $allowedAsFilter = in_array($param, $this->getFilterablePropertyNames()) || !$this->getFacetPrefix();
+
+        if($this->getFacetPrefix())
+        {
+            if(strpos((string)$param, $this->getFacetPrefix()) === 0)
+            {
+                $allowedAsFilter = true;
+            }
+        }
+
+        return $allowedAsFilter;
     }
 
     /**
@@ -179,6 +198,11 @@ abstract class ListingContextAbstract
 
         return $this->facetValueKeyFilter;
     }
+
+    /**
+     * @return array
+     */
+    abstract public function getFilterablePropertyNames() : array;
 
 
 }

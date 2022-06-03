@@ -126,7 +126,7 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
             }
 
             $this->facets->append($facet);
-            if($facet->isSelected())
+            if($facet->isSelected() || count($facet->getSelectedValues()))
             {
                 $this->addSelectedFacet($facet);
             }
