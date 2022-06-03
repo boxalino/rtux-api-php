@@ -51,7 +51,7 @@ class Block extends Accessor
      * The load of the model is done on model request to ensure all other properties
      * (blocks, etc) have been set on the context which is passed via "$this"
      *
-     * @return string|null
+     * @return string| AccessorModelInterface | null
      */
     public function getModel() :?AccessorModelInterface
     {

@@ -27,15 +27,10 @@ trait ApiPropertyTrait
         foreach($request->getParams() as $param => $values)
         {
             //it`s a Boxalino property - has the allowed filters prefix
-            if (strpos($param, $this->getFacetPrefix()) === 0)
+            if ($this->isParamAllowedAsFilter($param))
             {
                 $facets[] = substr($param, $position, strlen($param));
                 continue;
-            }
-
-            if(in_array($param, $this->getFilterablePropertyNames()))
-            {
-                $facets[] = $param;
             }
         }
 

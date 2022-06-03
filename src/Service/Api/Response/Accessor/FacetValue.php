@@ -187,7 +187,7 @@ class FacetValue extends Accessor
      */
     public function getMinValue(): string
     {
-        return $this->minValue;
+        return (string) $this->minValue;
     }
 
     /**
@@ -205,7 +205,7 @@ class FacetValue extends Accessor
      */
     public function getMaxValue(): string
     {
-        return $this->maxValue;
+        return (string) $this->maxValue;
     }
 
     /**

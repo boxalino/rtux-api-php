@@ -8,6 +8,11 @@ interface AccessorInterface
 {
 
     /**
+     *
+     */
+    public const BOXALINO_API_ACCESSOR_PARAMETER = "accessor";
+
+    /**
      * @param \StdClass $data
      * @param AccessorInterface $object
      * @return AccessorInterface

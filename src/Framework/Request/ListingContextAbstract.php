@@ -55,12 +55,7 @@ abstract class ListingContextAbstract
             }
 
             //it`s a store property or has the allowed filters prefix
-            $allowedAsFilter = in_array($param, $this->getFilterablePropertyNames());
-            if(strpos((string)$param, $this->getFacetPrefix()) === 0)
-            {
-                $allowedAsFilter = true;
-            }
-            if($allowedAsFilter)
+            if($this->isParamAllowedAsFilter($param))
             {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
                 $values = array_map("html_entity_decode", $values);
@@ -120,6 +115,26 @@ abstract class ListingContextAbstract
         }
 
         return $this;
+    }
+
+
+    /**
+     * @param string $param
+     * @return bool
+     */
+    protected function isParamAllowedAsFilter(string $param)
+    {
+        $allowedAsFilter = in_array($param, $this->getFilterablePropertyNames()) || !$this->getFacetPrefix();
+
+        if($this->getFacetPrefix())
+        {
+            if(strpos((string)$param, $this->getFacetPrefix()) === 0)
+            {
+                $allowedAsFilter = true;
+            }
+        }
+
+        return $allowedAsFilter;
     }
 
     /**
