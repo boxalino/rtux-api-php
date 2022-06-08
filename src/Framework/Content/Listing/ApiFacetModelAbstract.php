@@ -276,6 +276,54 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     }
 
     /**
+     * @return bool
+     */
+    public function isUseFacetOptionIdFilter(): bool
+    {
+        return $this->useFacetOptionIdFilter;
+    }
+
+    /**
+     * @param bool $useFacetOptionIdFilter
+     */
+    public function setUseFacetOptionIdFilter(bool $useFacetOptionIdFilter): void
+    {
+        $this->useFacetOptionIdFilter = $useFacetOptionIdFilter;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacetValueKey(): string
+    {
+        return $this->facetValueKey;
+    }
+
+    /**
+     * @param string $facetValueKey
+     */
+    public function setFacetValueKey(string $facetValueKey): void
+    {
+        $this->facetValueKey = $facetValueKey;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacetValuesDelimiter(): string
+    {
+        return $this->facetValuesDelimiter;
+    }
+
+    /**
+     * @param string $facetValuesDelimiter
+     */
+    public function setFacetValuesDelimiter(string $facetValuesDelimiter): void
+    {
+        $this->facetValuesDelimiter = $facetValuesDelimiter;
+    }
+
+    /**
      * Preparing element for API preview (ex: pwa context)
      * Call the _loadAccessors() in order to apply the propper content setters & getters on the facet options
      * Use camelcase to reuse the API properties
@@ -283,7 +331,10 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     public function load(): void
     {
         $this->_loadAccessors();
-        $this->loadPropertiesToObject($this, [], ["getLabel", "addSelectedFacet", "getByPosition", "getFacetsPrefix", "_loadAccessors", "facetRequiresPrefix"], true);
+        $this->loadPropertiesToObject($this, [],
+            ["getLabel", "addSelectedFacet", "getByPosition", "getFacetsPrefix", "_loadAccessors", "facetRequiresPrefix", "getValue", "getFacetValuesDelimiter", "getFacetValueKey", "isUseFacetOptionIdFilter"],
+            true
+        );
     }
 
     /**
