@@ -6,6 +6,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFac
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Facet;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\FacetValue;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ResponseHydratorTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 
@@ -52,6 +53,21 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
      * @var null | string
      */
     protected $defaultLanguageId = null;
+
+    /**
+     * @var bool
+     */
+    protected $useFacetOptionIdFilter;
+
+    /**
+     * @var string
+     */
+    protected $facetValueKey;
+
+    /**
+     * @var string
+     */
+    protected $facetValuesDelimiter;
 
     public function __construct()
     {
@@ -146,6 +162,44 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
      * @return bool
      */
     abstract protected function facetRequiresPrefix($facet) : bool;
+
+    /**
+     * Added to support the flow when the filter is done via facet option ID
+     * Added to support the use-case when the filter is done via another facet value correlation property
+     *
+     * @param FacetValue $facetValue
+     * @return int | string | null
+     */
+    protected function getValue(FacetValue $facetValue) : ?string
+    {
+        $value = $facetValue->getValue();
+        if($this->useFacetOptionIdFilter)
+        {
+            try{
+                $value = $facetValue->getId();
+            } catch (\Throwable $exception)
+            {
+                $value = $facetValue->getValue();
+            }
+        }
+
+        if($this->facetValueKey === "value")
+        {
+            return $value;
+        }
+
+        try{
+            $value = $facetValue->get($this->facetValueKey);
+            if(is_array($value))
+            {
+                return $value[0];
+            }
+        } catch (\Throwable $exception)
+        {
+        }
+
+        return $facetValue->getValue();
+    }
 
     /**
      * @param AccessorInterface $facet
