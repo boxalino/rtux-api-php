@@ -119,7 +119,7 @@ trait FacetHierarchicalTrait
         $sortOption = $this->getValueorderEnums();
         $sortedValues = new \ArrayIterator();
         /** add a natsort for facet values */
-        if(in_array($sortOption, ["natural","counter","alphabetical"]))
+        if(in_array($sortOption, ["natural","counter","alphabetical", "alphabetical_desc"]))
         {
             $facetValuesByKey = [];
             array_map(function(AccessorInterface $facetValue) use (&$facetValuesByKey, $sortOption) {
@@ -131,7 +131,20 @@ trait FacetHierarchicalTrait
                 $facetValuesByKey[$key] = $facetValue;
             }, $this->getValues()->getArrayCopy());
 
-            ksort($facetValuesByKey, SORT_NATURAL);
+            if($sortOption == "counter")
+            {
+                krsort($facetValuesByKey, SORT_NUMERIC);
+            }
+
+            if(in_array($sortOption, ["natural","alphabetical"]))
+            {
+                ksort($facetValuesByKey, SORT_NATURAL);
+            }
+
+            if(in_array($sortOption, ["alphabetical_desc"]))
+            {
+                krsort($facetValuesByKey, SORT_NATURAL);
+            }
             $index = 0;
             foreach($facetValuesByKey as $key => $facetValue)
             {
