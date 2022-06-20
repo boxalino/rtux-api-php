@@ -134,10 +134,7 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
         foreach($facets as $facet)
         {
             $facet = $this->toObject($facet, $this->getAccessorHandler()->getAccessor("facet"));
-            if($this->facetRequiresPrefix($facet))
-            {
-                $facet->setFieldPrefix($this->getFacetPrefix());
-            }
+            $facet->setFieldPrefix($this->getFacetPrefix());
             $label = $facet->getLabel();
             if(!$label || empty($label))
             {
@@ -153,15 +150,6 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
 
         return $this;
     }
-
-    /**
-     * Check that the facet is a store/e-shop property
-     * If it is not a store property - the prefix must be added
-     *
-     * @param $facet
-     * @return bool
-     */
-    abstract protected function facetRequiresPrefix($facet) : bool;
 
     /**
      * Added to support the flow when the filter is done via facet option ID
