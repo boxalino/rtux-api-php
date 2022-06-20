@@ -6,7 +6,6 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFac
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Facet;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\FacetValue;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ResponseHydratorTrait;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 
@@ -53,21 +52,6 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
      * @var null | string
      */
     protected $defaultLanguageId = null;
-
-    /**
-     * @var bool
-     */
-    protected $useFacetOptionIdFilter;
-
-    /**
-     * @var string
-     */
-    protected $facetValueKey;
-
-    /**
-     * @var string
-     */
-    protected $facetValuesDelimiter;
 
     public function __construct()
     {
@@ -152,44 +136,6 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     }
 
     /**
-     * Added to support the flow when the filter is done via facet option ID
-     * Added to support the use-case when the filter is done via another facet value correlation property
-     *
-     * @param FacetValue $facetValue
-     * @return int | string | null
-     */
-    protected function getValue(FacetValue $facetValue) : ?string
-    {
-        $value = $facetValue->getValue();
-        if($this->useFacetOptionIdFilter)
-        {
-            try{
-                $value = $facetValue->getId();
-            } catch (\Throwable $exception)
-            {
-                $value = $facetValue->getValue();
-            }
-        }
-
-        if($this->facetValueKey === "value")
-        {
-            return $value;
-        }
-
-        try{
-            $value = $facetValue->get($this->facetValueKey);
-            if(is_array($value))
-            {
-                return $value[0];
-            }
-        } catch (\Throwable $exception)
-        {
-        }
-
-        return $facetValue->getValue();
-    }
-
-    /**
      * @param AccessorInterface $facet
      * @return $this
      */
@@ -248,11 +194,11 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     }
 
     /**
-     * @return string | null
+     * @return string
      */
-    public function getFacetPrefix(): ?string
+    public function getFacetPrefix(): string
     {
-        return $this->facetPrefix;
+        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
     }
 
     /**
@@ -264,54 +210,6 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     }
 
     /**
-     * @return bool
-     */
-    public function isUseFacetOptionIdFilter(): bool
-    {
-        return $this->useFacetOptionIdFilter;
-    }
-
-    /**
-     * @param bool $useFacetOptionIdFilter
-     */
-    public function setUseFacetOptionIdFilter(bool $useFacetOptionIdFilter): void
-    {
-        $this->useFacetOptionIdFilter = $useFacetOptionIdFilter;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFacetValueKey(): string
-    {
-        return $this->facetValueKey;
-    }
-
-    /**
-     * @param string $facetValueKey
-     */
-    public function setFacetValueKey(string $facetValueKey): void
-    {
-        $this->facetValueKey = $facetValueKey;
-    }
-
-    /**
-     * @return string
-     */
-    public function getFacetValuesDelimiter(): string
-    {
-        return $this->facetValuesDelimiter;
-    }
-
-    /**
-     * @param string $facetValuesDelimiter
-     */
-    public function setFacetValuesDelimiter(string $facetValuesDelimiter): void
-    {
-        $this->facetValuesDelimiter = $facetValuesDelimiter;
-    }
-
-    /**
      * Preparing element for API preview (ex: pwa context)
      * Call the _loadAccessors() in order to apply the propper content setters & getters on the facet options
      * Use camelcase to reuse the API properties
@@ -319,10 +217,7 @@ abstract class ApiFacetModelAbstract implements AccessorFacetModelInterface
     public function load(): void
     {
         $this->_loadAccessors();
-        $this->loadPropertiesToObject($this, [],
-            ["getLabel", "addSelectedFacet", "getByPosition", "getFacetsPrefix", "_loadAccessors", "facetRequiresPrefix", "getValue", "getFacetValuesDelimiter", "getFacetValueKey", "isUseFacetOptionIdFilter"],
-            true
-        );
+        $this->loadPropertiesToObject($this, [], ["getLabel", "addSelectedFacet", "getByPosition", "getFacetsPrefix", "_loadAccessors"], true);
     }
 
     /**
