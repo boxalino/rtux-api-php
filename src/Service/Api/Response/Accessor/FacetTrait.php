@@ -23,11 +23,6 @@ trait FacetTrait
         foreach ($values as $index => $value) {
             /** @var FacetValue $facetValueEntity */
             $facetValueEntity = $this->toObject($value, $this->getAccessorHandler()->getAccessor("facetValue"));
-            if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
-                if ($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize()) {
-                    $facetValueEntity->setShow(false);
-                }
-            }
             $this->values->append($facetValueEntity);
         }
 

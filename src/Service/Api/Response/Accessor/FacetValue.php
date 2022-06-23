@@ -75,6 +75,16 @@ class FacetValue extends Accessor
     protected $path = [];
 
     /**
+     * @var string | null
+     */
+    protected $fullLabel = null;
+
+    /**
+     * @var bool
+     */
+    protected $highlighted = false;
+
+    /**
      * @return string
      */
     public function getValue(): ?string
@@ -187,7 +197,7 @@ class FacetValue extends Accessor
      */
     public function getMinValue(): string
     {
-        return (string) $this->minValue;
+        return $this->minValue;
     }
 
     /**
@@ -205,7 +215,7 @@ class FacetValue extends Accessor
      */
     public function getMaxValue(): string
     {
-        return (string) $this->maxValue;
+        return $this->maxValue;
     }
 
     /**
@@ -287,6 +297,42 @@ class FacetValue extends Accessor
     public function setPath(array $path): FacetValue
     {
         $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFullLabel(): ?string
+    {
+        return $this->fullLabel;
+    }
+
+    /**
+     * @param string|null $fullLabel
+     * @return FacetValue
+     */
+    public function setFullLabel(?string $fullLabel): FacetValue
+    {
+        $this->fullLabel = $fullLabel;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHighlighted(): bool
+    {
+        return $this->highlighted;
+    }
+
+    /**
+     * @param bool $highlighted
+     * @return FacetValue
+     */
+    public function setHighlighted(bool $highlighted): FacetValue
+    {
+        $this->highlighted = $highlighted;
         return $this;
     }
 

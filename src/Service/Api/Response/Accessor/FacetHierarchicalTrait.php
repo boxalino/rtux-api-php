@@ -18,12 +18,18 @@ trait FacetHierarchicalTrait
 {
 
     /**
+     * @var \ArrayIterator
+     */
+    protected $apiValues;
+
+    /**
      * @param array $values
      * @return Facet
      */
     protected function _setValuesHierarchical(array $values): Facet
     {
         $this->values = new \ArrayIterator();
+        $this->apiValues = new \ArrayIterator();
 
         foreach ($values as $index => $value)
         {
@@ -32,10 +38,8 @@ trait FacetHierarchicalTrait
         }
 
         $this->_createLevelWithValidChildren();
-
         return $this;
     }
-
 
     /**
      * @param array $values
@@ -79,13 +83,15 @@ trait FacetHierarchicalTrait
             $facetValueEntity->set("level", (string)$level);
             $facetValueEntity->set("parent", (string)$parentId);
 
-            $this->values->append($facetValueEntity);
+            $this->apiValues->append($facetValueEntity);
         }
     }
 
     /**
      * 1. If there is a selected facet option -> show the children from it only
-     * 2. If there is no selected facet option -> show the lowelest level with more than one kid
+     * 2. If there is no selected facet option:
+     * 2.a Show only the highlighted values
+     * 2.b show the lowelest level with more than one kid
      *
      * @return void
      */
@@ -98,11 +104,24 @@ trait FacetHierarchicalTrait
             {
                 $facetValues["selected"] = $facetValue->getValue();
             }
-        }, $this->getValues()->getArrayCopy());
+            if($facetValue->isHighlighted())
+            {
+                $facetValues["highlighted"] = true;
+            }
+        }, $this->getApiValues()->getArrayCopy());
+
+        if(isset($facetValues["highlighted"]))
+        {
+            $this->_setChildrenByRules(["highlighted" => true]);
+            return;
+        }
 
         if(isset($facetValues["selected"]))
         {
-            $this->_setChildrenByRules(["parent"=>$facetValues["selected"],"value"=>$facetValues["selected"]]);
+            $this->_setChildrenByRules([
+                    "parent" => $facetValues["selected"],
+                    "value" => $facetValues["selected"]]
+            );
             return;
         }
 
@@ -193,12 +212,12 @@ trait FacetHierarchicalTrait
     /**
      * @param \ArrayIterator $values
      * @param string $property
-     * @param string $value
+     * @param string | bool | int $value
      * @return void
      */
-    protected function _addFacetValueToCollection(\ArrayIterator &$values, string $property, string $value) : void
+    protected function _addFacetValueToCollection(\ArrayIterator &$values, string $property, $value) : void
     {
-        foreach($this->getValues() as $facetValue)
+        foreach($this->getApiValues() as $facetValue)
         {
             if($facetValue->get($property) === $value)
             {
@@ -228,6 +247,14 @@ trait FacetHierarchicalTrait
     }
 
     /**
+     * @return \ArrayIterator
+     */
+    public function getApiValues(): \ArrayIterator
+    {
+        return $this->apiValues;
+    }
+
+    /**
      * @param string $field
      * @return string
      */
@@ -251,5 +278,6 @@ trait FacetHierarchicalTrait
     {
         return [Facet::RTUX_API_FACET_CATEGORIES => Facet::RTUX_API_FACET_CATEGORY];
     }
+
 
 }
