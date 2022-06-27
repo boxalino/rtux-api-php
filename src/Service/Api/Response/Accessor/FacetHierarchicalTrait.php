@@ -23,6 +23,11 @@ trait FacetHierarchicalTrait
     protected $apiValues;
 
     /**
+     * @var bool
+     */
+    protected $noHighlightedFound = true;
+
+    /**
      * @param array $values
      * @return Facet
      */
@@ -112,6 +117,7 @@ trait FacetHierarchicalTrait
 
         if(isset($facetValues["highlighted"]))
         {
+            $this->noHighlightedFound = false;
             $this->_setChildrenByRules(["highlighted" => true]);
             return;
         }
@@ -168,9 +174,12 @@ trait FacetHierarchicalTrait
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
-                if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
-                    if ($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize()) {
-                        $facetValue->setShow(false);
+                if($this->noHighlightedFound)
+                {
+                    if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
+                        if ($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize()) {
+                            $facetValue->setShow(true);
+                        }
                     }
                 }
                 $sortedValues->append($facetValue);
