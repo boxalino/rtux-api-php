@@ -177,7 +177,7 @@ trait FacetHierarchicalTrait
                 if($this->noHighlightedFound)
                 {
                     if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
-                        if ($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize()) {
+                        if ($index < $this->getEnumDisplaySize() || $index <= $this->getEnumDisplayMaxSize()) {
                             $facetValue->setShow(true);
                         }
                     }
