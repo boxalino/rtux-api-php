@@ -3,6 +3,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response;
 
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Facet;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\UndefinedPropertyError;
 
@@ -25,6 +26,11 @@ trait ResponseHydratorTrait
      */
     public function toObject(\StdClass $data, AccessorInterface $object) : AccessorInterface
     {
+        if($object instanceof Facet)
+        {
+            $object->_addAccessorData($data);
+        }
+
         $dataAsObject = new \ReflectionObject($data);
         $properties = $dataAsObject->getProperties();
         $class = get_class($object);

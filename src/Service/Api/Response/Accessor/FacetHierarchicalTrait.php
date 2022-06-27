@@ -2,7 +2,7 @@
 namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
 
 /**
- * Class Facet
+ * Trait FacetHierarchicalTrait
  *
  * Boxalino API facet model
  * The properties defined are a base on what can be configured in Boxalino Intelligence Admin
@@ -171,17 +171,28 @@ trait FacetHierarchicalTrait
                 krsort($facetValuesByKey, SORT_NATURAL);
             }
             $index = 0;
+            /**
+             * @var string $key
+             * @var FacetValue $facetValue
+             */
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
+                $facetValue->setShow($facetValue->isHighlighted());
+
                 if($this->noHighlightedFound)
                 {
-                    if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
-                        if ($index < $this->getEnumDisplaySize() || $index < $this->getEnumDisplayMaxSize()) {
-                            $facetValue->setShow(true);
-                        }
+                    if($this->_getFromData("enumDisplaySize") && $index < $this->_getFromData("enumDisplaySize"))
+                    {
+                        $facetValue->setShow(true);
+                    }
+
+                    if($this->_getFromData("enumDisplayMaxSize") && $index < $this->_getFromData("enumDisplayMaxSize"))
+                    {
+                        $facetValue->setShow(true);
                     }
                 }
+
                 $sortedValues->append($facetValue);
             }
 
@@ -191,7 +202,6 @@ trait FacetHierarchicalTrait
 
     /**
      * @param array $valueRules
-     * @param array $showRules
      * @return void
      */
     protected function _setChildrenByRules(array $valueRules) : void
