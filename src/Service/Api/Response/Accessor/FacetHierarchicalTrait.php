@@ -47,8 +47,9 @@ trait FacetHierarchicalTrait
     }
 
     /**
-     * @param array $values
+     * @param $value
      * @param int $level
+     * @param string|null $parentId
      * @return void
      */
     protected function _buildTree($value, int $level, ?string $parentId = null)
@@ -174,12 +175,18 @@ trait FacetHierarchicalTrait
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
+                $facetValue->setShow($facetValue->isHighlighted());
+
                 if($this->noHighlightedFound)
                 {
-                    if ($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize()) {
-                        if ($index < $this->getEnumDisplaySize() || $index <= $this->getEnumDisplayMaxSize()) {
-                            $facetValue->setShow(true);
-                        }
+                    if($this->_getFromData("enumDisplaySize") && $index < $this->_getFromData("enumDisplaySize"))
+                    {
+                        $facetValue->setShow(true);
+                    }
+
+                    if($this->_getFromData("enumDisplayMaxSize") && $index < $this->_getFromData("enumDisplayMaxSize"))
+                    {
+                        $facetValue->setShow(true);
                     }
                 }
                 $sortedValues->append($facetValue);
@@ -191,7 +198,6 @@ trait FacetHierarchicalTrait
 
     /**
      * @param array $valueRules
-     * @param array $showRules
      * @return void
      */
     protected function _setChildrenByRules(array $valueRules) : void

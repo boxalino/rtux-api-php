@@ -37,7 +37,7 @@ class FacetValue extends Accessor
     /**
      * @var bool
      */
-    protected $show = false;
+    protected $show = true;
 
     /**
      * @var bool

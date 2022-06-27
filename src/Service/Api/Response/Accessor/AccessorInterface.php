@@ -42,6 +42,12 @@ interface AccessorInterface
     public function add(string $propertyName, $content);
 
     /**
+     * @param $data
+     * @return AccessorInterface
+     */
+    public function _addAccessorData($data) : AccessorInterface;
+
+    /**
      * Access the Boxalino response attributes for API JS tracker
      *
      * @return \ArrayIterator
