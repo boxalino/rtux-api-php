@@ -175,10 +175,10 @@ trait FacetHierarchicalTrait
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
-                $facetValue->setShow($facetValue->isHighlighted());
-
                 if($this->noHighlightedFound)
                 {
+                    $facetValue->setShow(false);
+
                     if($this->_getFromData("enumDisplaySize") && $index < $this->_getFromData("enumDisplaySize"))
                     {
                         $facetValue->setShow(true);
@@ -189,6 +189,7 @@ trait FacetHierarchicalTrait
                         $facetValue->setShow(true);
                     }
                 }
+
                 $sortedValues->append($facetValue);
             }
 
