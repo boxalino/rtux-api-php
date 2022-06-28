@@ -26,7 +26,7 @@ trait ResponseHydratorTrait
      */
     public function toObject(\StdClass $data, AccessorInterface $object) : AccessorInterface
     {
-        if($object instanceof Facet)
+        if($object instanceof Facet || $object instanceof FacetValue)
         {
             $object->_addAccessorData($data);
         }

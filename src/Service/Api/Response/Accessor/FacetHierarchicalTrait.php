@@ -175,6 +175,12 @@ trait FacetHierarchicalTrait
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
+                if($facetValue->isHighlighted())
+                {
+                    $showFlag= $facetValue->_getFromData("show") ?? false;
+                    $facetValue->setShow($showFlag);
+                }
+
                 if($this->noHighlightedFound)
                 {
                     $facetValue->setShow(false);
