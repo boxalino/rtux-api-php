@@ -4,6 +4,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Facet;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\FacetValue;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\UndefinedPropertyError;
 

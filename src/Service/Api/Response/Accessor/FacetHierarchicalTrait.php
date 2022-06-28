@@ -177,8 +177,7 @@ trait FacetHierarchicalTrait
                 $index++;
                 if($facetValue->isHighlighted())
                 {
-                    $showFlag= $facetValue->_getFromData("show") ?? false;
-                    $facetValue->setShow($showFlag);
+                    $facetValue->setShow($facetValue->_getFromData("show") ?? false);
                 }
 
                 if($this->noHighlightedFound)
