@@ -177,6 +177,11 @@ class Facet extends Accessor
     protected $fieldPrefix;
 
     /**
+     * @var bool
+     */
+    protected $resetOnRemove = false;
+
+    /**
      * @return string
      */
     public function getField(): string
@@ -673,6 +678,24 @@ class Facet extends Accessor
         }
 
         return $this->selectedValues;
+    }
+
+    /**
+     * @param bool $resetOnRemove
+     * @return Facet
+     */
+    public function setResetOnRemove(bool $resetOnRemove): Facet
+    {
+        $this->resetOnRemove = $resetOnRemove;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResetOnRemove(): bool
+    {
+        return $this->resetOnRemove;
     }
 
 
