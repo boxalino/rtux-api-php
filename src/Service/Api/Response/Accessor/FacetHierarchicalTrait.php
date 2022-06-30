@@ -142,43 +142,14 @@ trait FacetHierarchicalTrait
     protected function _sortHierarchicalFacetValues() : void
     {
         $sortOption = $this->getValueorderEnums();
-        $sortedValues = new \ArrayIterator();
-        /** add a natsort for facet values */
         if(in_array($sortOption, ["natural","counter","alphabetical", "alphabetical_desc"]))
         {
-            $facetValuesByKey = [];
-            array_map(function(AccessorInterface $facetValue) use (&$facetValuesByKey, $sortOption) {
-                $key = $facetValue->getLabel();
-                if($sortOption === "counter")
-                {
-                    $key = $facetValue->getHitCount() . "_" . $facetValue->getLabel();
-                }
-                $facetValuesByKey[$key] = $facetValue;
-            }, $this->getValues()->getArrayCopy());
-
-            if($sortOption == "counter")
-            {
-                krsort($facetValuesByKey, SORT_NUMERIC);
-            }
-
-            if(in_array($sortOption, ["natural","alphabetical"]))
-            {
-                ksort($facetValuesByKey, SORT_NATURAL);
-            }
-
-            if(in_array($sortOption, ["alphabetical_desc"]))
-            {
-                krsort($facetValuesByKey, SORT_NATURAL);
-            }
+            $facetValuesByKey = $this->_sortFacetValues($sortOption);
+            $sortedValues = new \ArrayIterator();
             $index = 0;
-            /**
-             * @var string $key
-             * @var FacetValue $facetValue
-             */
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
-
                 if($facetValue->isHighlighted())
                 {
                     $facetValue->setShow($facetValue->_getFromData("show") ?? false);
@@ -203,6 +174,119 @@ trait FacetHierarchicalTrait
             }
 
             $this->values = $sortedValues;
+        }
+    }
+
+    /**
+     * Sorting the facet values:
+     * 1. The highlighted values must be sorted within their show group (sort show:true & show:false options independenty)
+     * 2. The default
+     * @param string $sortOption
+     * @return array
+     */
+    protected function _sortFacetValues(string $sortOption) : array
+    {
+        $facetValuesByKey = []; $noHighlightedSort = $this->noHighlightedFound;
+        array_map(function(AccessorInterface $facetValue) use (&$facetValuesByKey, $sortOption, $noHighlightedSort)
+        {
+            $key = $facetValue->getLabel();
+            if($sortOption === "counter")
+            {
+                $key = $facetValue->getHitCount() . "_" . $facetValue->getLabel();
+            }
+            if($noHighlightedSort)
+            {
+                $facetValuesByKey[$key] = $facetValue;
+            } else {
+                $show = $facetValue->_getFromData("show") ?? false;
+                $facetValuesByKey[$show][$key] = $facetValue;
+            }
+        }, $this->getValues()->getArrayCopy());
+
+        return $this->_addSortToFacetValues($facetValuesByKey, $sortOption);
+    }
+
+    /**
+     * @param array $facetValuesByKey
+     * @param string $sortOption
+     * @return array
+     */
+    protected function _addSortToFacetValues(array $facetValuesByKey, string $sortOption) : array
+    {
+        if(!$this->noHighlightedFound)
+        {
+            if(!isset($facetValuesByKey[false]))
+            {
+                $facetValuesByKey[false] = [];
+            }
+        }
+
+        $this->_sortCounter($facetValuesByKey, $sortOption);
+        $this->_sortNatural($facetValuesByKey, $sortOption);
+        $this->_sortAlphabeticalDesc($facetValuesByKey, $sortOption);
+
+        if($this->noHighlightedFound)
+        {
+            return $facetValuesByKey;
+        }
+
+        return array_merge($facetValuesByKey[true], $facetValuesByKey[false]);
+    }
+
+    /**
+     * @param array $facetValuesByKey
+     * @param string $sortOption
+     * @return void
+     */
+    protected function _sortCounter(array &$facetValuesByKey, string $sortOption) : void
+    {
+        if($sortOption == "counter")
+        {
+            if($this->noHighlightedFound)
+            {
+                krsort($facetValuesByKey, SORT_NUMERIC);
+            } else {
+                krsort($facetValuesByKey[true], SORT_NUMERIC);
+                krsort($facetValuesByKey[false], SORT_NUMERIC);
+            }
+        }
+    }
+
+    /**
+     * @param array $facetValuesByKey
+     * @param string $sortOption
+     * @return void
+     */
+    protected function _sortNatural(array &$facetValuesByKey, string $sortOption) : void
+    {
+        if(in_array($sortOption, ["natural","alphabetical"]))
+        {
+            if($this->noHighlightedFound)
+            {
+                ksort($facetValuesByKey, SORT_NATURAL);
+            } else {
+                ksort($facetValuesByKey[true], SORT_NATURAL);
+                ksort($facetValuesByKeyy[false], SORT_NATURAL);
+            }
+        }
+    }
+
+    /**
+     * @param array $facetValuesByKey
+     * @param string $sortOption
+     * @return void
+     */
+    protected function _sortAlphabeticalDesc(array &$facetValuesByKey, string $sortOption) : void
+    {
+        if(in_array($sortOption, ["alphabetical_desc"]))
+        {
+            if($this->noHighlightedFound)
+            {
+                krsort($facetValuesByKey, SORT_NATURAL);
+            } else {
+                krsort($facetValuesByKey[true], SORT_NATURAL);
+                krsort($facetValuesByKey[false], SORT_NATURAL);
+            }
         }
     }
 
