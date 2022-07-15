@@ -55,13 +55,13 @@ abstract class ListingContextAbstract
             }
 
             //it`s a store property or has the allowed filters prefix
-            if($this->isParamAllowedAsFilter($param))
+            if($this->isParamAllowedAsFilter((string)$param))
             {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
                 $values = array_map("html_entity_decode", $values);
                 $this->getApiRequest()->addFacets(
                     $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix($param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey(), $this->getFacetValueCorrelation())
+                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix((string)$param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey(), $this->getFacetValueCorrelation())
                 );
             }
         }
