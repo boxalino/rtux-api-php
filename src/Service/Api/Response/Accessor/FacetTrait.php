@@ -4,7 +4,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
 /**
  * Trait FacetTrait
  *
- * Boxalino API facet trait
+ * Boxalino API facet model
  * The properties defined are a base on what can be configured in Boxalino Intelligence Admin
  * The rest of the properties (custom defined) can be accessed directly
  *
@@ -23,7 +23,7 @@ trait FacetTrait
         foreach ($values as $index => $value) {
             /** @var FacetValue $facetValueEntity */
             $facetValueEntity = $this->toObject($value, $this->getAccessorHandler()->getAccessor("facetValue"));
-            $this->_defineShow((int)$index, $facetValueEntity);
+            $facetValueEntity->setShow($this->_defineShow((int) $index, count($values)));
 
             $this->values->append($facetValueEntity);
         }
@@ -52,7 +52,7 @@ trait FacetTrait
             foreach($facetValuesByKey as $key => $facetValue)
             {
                 $index++;
-                $this->_defineShow((int)$index, $facetValue);
+                $facetValue->setShow($this->_defineShow($index, $this->getValues()->count()));
 
                 $sortedValues->append($facetValue);
             }
@@ -94,7 +94,7 @@ trait FacetTrait
                 foreach($facetValuesByKey as $key => $facetValue)
                 {
                     $index++;
-                    $this->_defineShow($index, $facetValue);
+                    $facetValue->setShow($this->_defineShow($index, $this->getValues()->count()));
 
                     $sortedValues->append($facetValue);
                 }
@@ -102,7 +102,7 @@ trait FacetTrait
                 foreach($facetValuesNoKey as $facetValue)
                 {
                     $index++;
-                    $this->_defineShow($index, $facetValue);
+                    $facetValue->setShow($this->_defineShow($index, $this->getValues()->count()));
 
                     $sortedValues->append($facetValue);
                 }
@@ -114,20 +114,32 @@ trait FacetTrait
 
     /**
      * @param int $index
-     * @param FacetValue $facetValueEntity
-     * @return void
+     * @param int $totalFacetOptions
+     * @return bool
      */
-    protected function _defineShow(int $index, FacetValue &$facetValueEntity) : void
+    protected function _defineShow(int $index, int $totalFacetOptions) : bool
     {
         if($this->_getFromData("enumDisplaySize") && $index > $this->_getFromData("enumDisplaySize"))
         {
-            $facetValueEntity->setShow(false);
+            if($this->_getFromData("enumDisplayMaxSize"))
+            {
+                if ($totalFacetOptions > $this->_getFromData("enumDisplayMaxSize"))
+                {
+                    return false;
+                }
+
+                return true;
+            }
+
+            return false;
         }
 
-        if($this->_getFromData("enumDisplaySize") && $index > $this->_getFromData("enumDisplayMaxSize"))
+        if($this->_getFromData("enumDisplayMaxSize") && $index > $this->_getFromData("enumDisplayMaxSize"))
         {
-            $facetValueEntity->setShow(false);
+            return false;
         }
+
+        return true;
     }
 
 
