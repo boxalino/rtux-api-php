@@ -60,24 +60,24 @@ interface RequestInterface
     public function getLocale() : string;
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getClientIp() : string;
+    public function getClientIp() : ?string;
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUserAgent() : string;
+    public function getUserAgent() : ?string;
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUserReferer() : string;
+    public function getUserReferer() : ?string;
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getUserUrl() : string;
+    public function getUserUrl() : ?string;
 
     /**
      * Gets the list of all parameters on the request (query, etc)
