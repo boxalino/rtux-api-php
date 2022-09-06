@@ -102,6 +102,7 @@ abstract class ApiLoaderAbstract
     {
         $page = $this->getApiResponsePage();
         $page->setBlocks($this->apiCallService->getApiResponse()->getBlocks())
+            ->setCorrelations($this->apiCallService->getApiResponse()->getCorrelations())
             ->setLeft($this->apiCallService->getApiResponse()->getLeft())
             ->setTop($this->apiCallService->getApiResponse()->getTop())
             ->setBottom($this->apiCallService->getApiResponse()->getBottom())

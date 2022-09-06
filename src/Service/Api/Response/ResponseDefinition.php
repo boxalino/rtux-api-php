@@ -56,6 +56,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
     /**
      * @var null | \ArrayIterator
      */
+    protected $correlations = null;
+
+    /**
+     * @var null | \ArrayIterator
+     */
     protected $seoProperties = null;
 
     /**
@@ -280,6 +285,28 @@ class ResponseDefinition implements ResponseDefinitionInterface
         }
 
         return $this->blocks;
+    }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator
+    {
+        if(is_null($this->correlations))
+        {
+            $this->correlations = new \ArrayIterator();
+            try{
+                foreach($this->get()->correlations as $correlation)
+                {
+                    $this->correlations->append($this->toObject($correlation, $this->getAccessorHandler()->getAccessor("correlations")));
+                }
+            } catch (\Throwable $exception)
+            {
+                $this->log("BoxalinoResponseAPI: Something when wrong when accessing the correlations. Error :" . $exception->getMessage());
+            }
+        }
+
+        return $this->correlations;
     }
 
     /**

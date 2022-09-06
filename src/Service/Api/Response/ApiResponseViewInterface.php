@@ -22,6 +22,17 @@ interface ApiResponseViewInterface
     public function setBlocks(\ArrayIterator $blocks) : ApiResponseViewInterface;
 
     /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator;
+
+    /**
+     * @param \ArrayIterator $correlations
+     * @return $this
+     */
+    public function setCorrelations(\ArrayIterator $correlations) : ApiResponseViewInterface;
+
+    /**
      * @return string
      */
     public function getGroupBy() : string;

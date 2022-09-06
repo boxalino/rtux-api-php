@@ -10,7 +10,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ApiResponseViewInter
  *
  * @package Boxalino\RealTimeUserExperience\Model\Response\Page
  */
-class ApiResponsePage  extends ApiBasePage
+class ApiResponsePage extends ApiBasePage
     implements ApiResponsePageInterface
 {
     /**

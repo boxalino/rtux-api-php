@@ -67,6 +67,11 @@ interface ResponseDefinitionInterface
     public function getBlocks() : \ArrayIterator;
 
     /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator;
+
+    /**
      * Debug and performance information
      *
      * @return array
