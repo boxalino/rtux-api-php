@@ -116,10 +116,15 @@ class RequestDefinition implements RequestDefinitionInterface
     protected $parameters = [];
 
     /**
-     * @param FilterDefinition ...$filterDefinitions
-     * @return $this
+     * @var array
      */
-    public function addFilters(FilterDefinition ...$filterDefinitions) : self
+    protected $correlations = [];
+
+    /**
+     * @param FilterDefinition ...$filterDefinitions
+     * @return RequestDefinitionInterface
+     */
+    public function addFilters(FilterDefinition ...$filterDefinitions) : RequestDefinitionInterface
     {
         foreach ($filterDefinitions as $filter) {
             $this->filters[] = $filter->toArray();
@@ -130,9 +135,9 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param SortingDefinition ...$sortingDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
-    public function addSort(SortingDefinition ...$sortingDefinitions) : self
+    public function addSort(SortingDefinition ...$sortingDefinitions) : RequestDefinitionInterface
     {
         foreach ($sortingDefinitions as $sort) {
             $this->sort[] = $sort->toArray();
@@ -143,9 +148,9 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param FacetDefinition ...$facetDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
-    public function addFacets(FacetDefinition ...$facetDefinitions) : self
+    public function addFacets(FacetDefinition ...$facetDefinitions) : RequestDefinitionInterface
     {
         foreach ($facetDefinitions as $facet) {
             $this->facets[] = $facet->toArray();
@@ -156,7 +161,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param HeaderParameterDefinition ...$headerParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addHeaderParameters(HeaderParameterDefinition ...$headerParameterDefinitions)
     {
@@ -169,12 +174,25 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param UserParameterDefinition ...$userParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addParameters(UserParameterDefinition ...$userParameterDefinitions)
     {
         foreach ($userParameterDefinitions as $parameter) {
             $this->parameters = array_merge($this->parameters, $parameter->toArray());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param CorrelationDefinition ...$correlationDefinitions
+     * @return RequestDefinitionInterface
+     */
+    public function addCorrelations(CorrelationDefinition ...$correlationDefinitions) : RequestDefinitionInterface
+    {
+        foreach ($correlationDefinitions as $correlation) {
+            $this->correlations[] = $correlation->toArray();
         }
 
         return $this;
@@ -192,7 +210,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $apiSecret
      * @return RequestDefinition
      */
-    public function setApiSecret(string $apiSecret) : self
+    public function setApiSecret(string $apiSecret) : RequestDefinitionInterface
     {
         $this->apiSecret = $apiSecret;
         return $this;
@@ -210,7 +228,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param bool $dev
      * @return RequestDefinition
      */
-    public function setDev(bool $dev) : self
+    public function setDev(bool $dev) : RequestDefinitionInterface
     {
         $this->dev = $dev;
         return $this;
@@ -228,7 +246,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param bool $test
      * @return RequestDefinition
      */
-    public function setTest(bool $test) : self
+    public function setTest(bool $test) : RequestDefinitionInterface
     {
         $this->test = $test;
         return $this;
@@ -246,7 +264,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $language
      * @return RequestDefinition
      */
-    public function setLanguage(string $language) : self
+    public function setLanguage(string $language) : RequestDefinitionInterface
     {
         $this->language = $language;
         return $this;
@@ -264,7 +282,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $sessionId
      * @return RequestDefinition
      */
-    public function setSessionId(string $sessionId) : self
+    public function setSessionId(string $sessionId) : RequestDefinitionInterface
     {
         $this->sessionId = $sessionId;
         return $this;
@@ -282,7 +300,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $profileId
      * @return RequestDefinition
      */
-    public function setProfileId(string $profileId) : self
+    public function setProfileId(string $profileId) : RequestDefinitionInterface
     {
         $this->profileId = $profileId;
         return $this;
@@ -300,7 +318,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $customerId
      * @return RequestDefinition
      */
-    public function setCustomerId(string $customerId) : self
+    public function setCustomerId(string $customerId) : RequestDefinitionInterface
     {
         $this->customerId = $customerId;
         return $this;
@@ -318,7 +336,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $widget
      * @return RequestDefinition
      */
-    public function setWidget(string $widget) : self
+    public function setWidget(string $widget) : RequestDefinitionInterface
     {
         $this->widget = $widget;
         return $this;
@@ -336,7 +354,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param int $hitCount
      * @return RequestDefinition
      */
-    public function setHitCount(int $hitCount) : self
+    public function setHitCount(int $hitCount) : RequestDefinitionInterface
     {
         $this->hitCount = $hitCount;
         return $this;
@@ -354,7 +372,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param int $offset
      * @return RequestDefinition
      */
-    public function setOffset(int $offset) : self
+    public function setOffset(int $offset) : RequestDefinitionInterface
     {
         $this->offset = $offset;
         return $this;
@@ -372,7 +390,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $groupBy
      * @return RequestDefinition
      */
-    public function setGroupBy(string $groupBy) : self
+    public function setGroupBy(string $groupBy) : RequestDefinitionInterface
     {
         $this->groupBy = $groupBy;
         return $this;
@@ -388,9 +406,9 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $query
-     * @return $this
+     * @return RequestDefinitionInterface
      */
-    public function setQuery(string $query) : self
+    public function setQuery(string $query) : RequestDefinitionInterface
     {
         $this->query = strip_tags($query);
         return $this;
@@ -408,7 +426,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param array $returnFields
      * @return RequestDefinition
      */
-    public function setReturnFields(array $returnFields) : self
+    public function setReturnFields(array $returnFields) : RequestDefinitionInterface
     {
         $this->returnFields = $returnFields;
         return $this;
@@ -443,7 +461,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param bool $orFilters
      * @return RequestDefinition
      */
-    public function setOrFilters(bool $orFilters) : self
+    public function setOrFilters(bool $orFilters) : RequestDefinitionInterface
     {
         $this->orFilters = $orFilters;
         return $this;
@@ -457,7 +475,6 @@ class RequestDefinition implements RequestDefinitionInterface
         return $this->facets;
     }
 
-
     /**
      * @return array
      */
@@ -470,10 +487,18 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param array $parameters
      * @return RequestDefinition
      */
-    public function setParameters(array $parameters): self
+    public function setParameters(array $parameters): RequestDefinitionInterface
     {
         $this->parameters = $parameters;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCorrelations(): array
+    {
+        return $this->correlations;
     }
 
     /**
@@ -488,7 +513,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $username
      * @return RequestDefinition
      */
-    public function setUsername(string $username) : self
+    public function setUsername(string $username) : RequestDefinitionInterface
     {
         $this->username = $username;
         return $this;
@@ -506,7 +531,7 @@ class RequestDefinition implements RequestDefinitionInterface
      * @param string $apiKey
      * @return RequestDefinition
      */
-    public function setApiKey(string $apiKey) : self
+    public function setApiKey(string $apiKey) : RequestDefinitionInterface
     {
         $this->apiKey = $apiKey;
         return $this;
