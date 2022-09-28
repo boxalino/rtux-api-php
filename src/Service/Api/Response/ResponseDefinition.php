@@ -127,7 +127,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
                         }
 
                         return $object->getBxHits()->getTotalHitCount();
-                    } catch (\Exception $exception)
+                    } catch (\Throwable $exception)
                     {
                         $this->logger->info($exception->getMessage());
                         continue;
@@ -136,7 +136,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return 0;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return 0;
         }
@@ -157,7 +157,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return null;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return null;
         }
@@ -175,7 +175,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return false;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return false;
         }
@@ -193,7 +193,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return null;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return null;
         }
@@ -211,7 +211,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return false;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return false;
         }
@@ -230,7 +230,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return "N/A";
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return "N/A";
         }
@@ -249,7 +249,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return "N/A";
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return "N/A";
         }
@@ -268,7 +268,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return "N/A";
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return "N/A";
         }
@@ -281,7 +281,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
     {
         if(is_null($this->blocks))
         {
-            $this->blocks = $this->getContentByType("blocks");
+            $this->blocks = $this->getContentByType(ResponseDefinitionInterface::BOXALINO_PARAMETER_BLOCKS);
         }
 
         return $this->blocks;
@@ -296,13 +296,17 @@ class ResponseDefinition implements ResponseDefinitionInterface
         {
             $this->correlations = new \ArrayIterator();
             try{
-                foreach($this->get()->correlations as $correlation)
+                $type = ResponseDefinitionInterface::BOXALINO_PARAMETER_CORRELATIONS;
+                if(property_exists($this->get(), $type))
                 {
-                    $this->correlations->append($this->toObject($correlation, $this->getAccessorHandler()->getAccessor("correlations")));
+                    foreach($this->get()->$type as $correlation)
+                    {
+                        $this->correlations->append($this->toObject($correlation, $this->getAccessorHandler()->getAccessor($type)));
+                    }
                 }
             } catch (\Throwable $exception)
             {
-                $this->log("BoxalinoResponseAPI: Something when wrong when accessing the correlations. Error :" . $exception->getMessage());
+                $this->log("BoxalinoResponseAPI: Something when wrong when accessing the $type. Error :" . $exception->getMessage());
             }
         }
 
@@ -328,7 +332,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
         } catch (\ErrorException $error)
         {
             /** there is no layout position for the narrative, not an issue */
-        } catch (\Exception $error)
+        } catch (\Throwable $error)
         {
             $this->logger->warning("BoxalinoResponseAPI: Something went wrong during content extract for $type: " . $error->getMessage());
         }
@@ -342,7 +346,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getBlockObject(\StdClass $block) : AccessorInterface
     {
-        return $this->toObject($block, $this->getAccessorHandler()->getAccessor("blocks"));
+        return $this->toObject($block, $this->getAccessorHandler()->getAccessor(ResponseDefinitionInterface::BOXALINO_PARAMETER_BLOCKS));
     }
 
     /**
@@ -355,7 +359,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
         try{
             $index = 0;
             return array_merge($this->get()->performance, $this->get()->advanced->$index);
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return $this->get()->performance;
         }
@@ -373,7 +377,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return $this->seoProperties;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return null;
         }
@@ -391,7 +395,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return $this->seoMetaProperties;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return null;
         }
@@ -411,7 +415,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return null;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return null;
         }
@@ -431,7 +435,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return null;
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return null;
         }
@@ -451,7 +455,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             }
 
             return [];
-        } catch(\Exception $exception)
+        } catch(\Throwable $exception)
         {
             return [];
         }

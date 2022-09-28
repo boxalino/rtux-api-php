@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\ResponseDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\WrongDependencyTypeException;
 
 /**
@@ -145,7 +146,7 @@ class Block extends Accessor
         $this->blocks = new \ArrayIterator();
         foreach($blocks as $block)
         {
-            $this->blocks->append($this->toObject($block, $this->getAccessorHandler()->getAccessor("blocks")));
+            $this->blocks->append($this->toObject($block, $this->getAccessorHandler()->getAccessor(ResponseDefinitionInterface::BOXALINO_PARAMETER_BLOCKS)));
         }
 
         return $this;

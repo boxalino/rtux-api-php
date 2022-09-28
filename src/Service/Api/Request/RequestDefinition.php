@@ -577,6 +577,7 @@ class RequestDefinition implements RequestDefinitionInterface
     /**
      * @return false|mixed|string
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return json_encode($this->toArray(), JSON_PRETTY_PRINT);
