@@ -22,6 +22,7 @@ interface ResponseDefinitionInterface
     const BOXALINO_PARAMETER_SEO_META_TITLE="bx-html-meta-title";
     const BOXALINO_PARAMETER_CORRELATIONS="correlations";
     const BOXALINO_PARAMETER_BLOCKS="blocks";
+    const BOXALINO_DEFAULT_VALUE="rtux-not-available";
 
     /**
      * @return int

@@ -108,12 +108,18 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getHitCount() : int
     {
+        if(is_null($this->get()))
+        {
+            return 0;
+        }
+
         try{
             try {
                 if(property_exists($this->get()->system, "mainHitCount"))
                 {
                     return $this->get()->system->mainHitCount;
                 }
+                
                 throw new UndefinedPropertyError("BoxalinoAPI Logical Branch switch.");
             } catch(UndefinedPropertyError $exception)
             {
@@ -134,12 +140,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
                     }
                 }
             }
-
-            return 0;
-        } catch(\Throwable $exception)
-        {
-            return 0;
-        }
+        } catch(\Throwable $exception) {}
 
         return 0;
     }
@@ -149,18 +150,20 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getRedirectUrl() : ?string
     {
+        if(is_null($this->get()))
+        {
+            return null;
+        }
+
         try{
             $index = 0;
             if(property_exists($this->get()->advanced->$index, ResponseDefinitionInterface::BOXALINO_PARAMETER_REDIRECT_URL))
             {
                 return $this->get()->advanced->$index->redirect_url;
             }
+        } catch(\Throwable $exception) {}
 
-            return null;
-        } catch(\Throwable $exception)
-        {
-            return null;
-        }
+        return null;
     }
 
     /**
@@ -168,17 +171,19 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function isCorrectedSearchQuery() : bool
     {
+        if(is_null($this->get()))
+        {
+            return false;
+        }
+
         try{
             if(property_exists($this->get()->system, ResponseDefinitionInterface::BOXALINO_PARAMETER_CORRECTED_SEARCH_QUERY))
             {
                 return (bool) $this->get()->system->correctedSearchQuery;
             }
+        } catch(\Throwable $exception) {}
 
-            return false;
-        } catch(\Throwable $exception)
-        {
-            return false;
-        }
+        return false;
     }
 
     /**
@@ -186,17 +191,19 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getCorrectedSearchQuery() : ?string
     {
+        if(is_null($this->get()))
+        {
+            return null;
+        }
+
         try{
             if(property_exists($this->get()->system, ResponseDefinitionInterface::BOXALINO_PARAMETER_CORRECTED_SEARCH_QUERY))
             {
                 return $this->get()->system->correctedSearchQuery;
             }
-
-            return null;
-        } catch(\Throwable $exception)
-        {
-            return null;
-        }
+        } catch(\Throwable $exception) {}
+        
+        return null;
     }
 
     /**
@@ -204,17 +211,19 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function hasSearchSubPhrases() : bool
     {
+        if(is_null($this->get()))
+        {
+            return false;
+        }
+
         try{
             if(property_exists($this->get()->system, ResponseDefinitionInterface::BOXALINO_PARAMETER_HAS_SEARCH_SUBPHRASES))
             {
                 return (bool) $this->get()->system->hasSearchSubPhrases;
             }
-
-            return false;
-        } catch(\Throwable $exception)
-        {
-            return false;
-        }
+        } catch(\Throwable $exception) {}
+        
+        return false;
     }
 
     /**
@@ -222,18 +231,20 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getRequestId() : string
     {
+        if(is_null($this->get()))
+        {
+            return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
+        }
+
         try{
             $index = 0;
             if(property_exists($this->get()->advanced->$index, ResponseDefinitionInterface::BOXALINO_PARAMETER_BX_REQUEST_ID))
             {
                 return $this->get()->advanced->$index->_bx_request_id;
             }
+        } catch(\Throwable $exception) {}
 
-            return "N/A";
-        } catch(\Throwable $exception)
-        {
-            return "N/A";
-        }
+        return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
     }
 
     /**
@@ -241,18 +252,20 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getGroupBy() : string
     {
+        if(is_null($this->get()))
+        {
+            return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
+        }
+
         try{
             $index = 0;
             if(property_exists($this->get()->advanced->$index, ResponseDefinitionInterface::BOXALINO_PARAMETER_BX_GROUP_BY))
             {
                 return $this->get()->advanced->$index->_bx_group_by;
             }
+        } catch(\Throwable $exception) {}
 
-            return "N/A";
-        } catch(\Throwable $exception)
-        {
-            return "N/A";
-        }
+        return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
     }
 
     /**
@@ -260,18 +273,20 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getVariantId() : string
     {
+        if(is_null($this->get()))
+        {
+            return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
+        }
+
         try{
             $index = 0;
             if(property_exists($this->get()->advanced->$index, ResponseDefinitionInterface::BOXALINO_PARAMETER_BX_VARIANT_UUID))
             {
                 return $this->get()->advanced->$index->_bx_variant_uuid;
             }
+        } catch(\Throwable $exception) {}
 
-            return "N/A";
-        } catch(\Throwable $exception)
-        {
-            return "N/A";
-        }
+        return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
     }
 
     /**
@@ -295,6 +310,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
         if(is_null($this->correlations))
         {
             $this->correlations = new \ArrayIterator();
+            if(is_null($this->get()))
+            {
+                return $this->correlations;
+            }
+
             try{
                 $type = ResponseDefinitionInterface::BOXALINO_PARAMETER_CORRELATIONS;
                 if(property_exists($this->get(), $type))
@@ -320,6 +340,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
     public function getContentByType(string $type) : \ArrayIterator
     {
         $content = new \ArrayIterator();
+        if(is_null($this->get()))
+        {
+            return $content;
+        }
+
         try{
             if(property_exists($this->get(), $type))
             {
@@ -356,6 +381,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getAdvanced() : array
     {
+        if(is_null($this->get()))
+        {
+            return [];
+        }
+
         try{
             $index = 0;
             return array_merge($this->get()->performance, $this->get()->advanced->$index);
@@ -370,6 +400,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getSeoProperties() : ?\ArrayIterator
     {
+        if(is_null($this->get()))
+        {
+            return null;
+        }
+
         try{
             if(is_null($this->seoProperties))
             {
@@ -388,6 +423,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getSeoMetaTagsProperties() : ?\ArrayIterator
     {
+        if(is_null($this->get()))
+        {
+            return null;
+        }
+
         try{
             if(is_null($this->seoMetaProperties))
             {
@@ -406,6 +446,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getSeoPageTitle() : ?string
     {
+        if(is_null($this->get()))
+        {
+            return null;
+        }
+
         try{
             $index = 0;
             $property = ResponseDefinitionInterface::BOXALINO_PARAMETER_SEO_PAGE_TITLE;
@@ -426,6 +471,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getSeoPageMetaTitle() : ?string
     {
+        if(is_null($this->get()))
+        {
+            return null;
+        }
+
         try{
             $index = 0;
             $property = ResponseDefinitionInterface::BOXALINO_PARAMETER_SEO_META_TITLE;
@@ -433,12 +483,9 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->$property;
             }
-
-            return null;
-        } catch(\Throwable $exception)
-        {
-            return null;
-        }
+        } catch(\Throwable $exception) {}
+        
+        return null;
     }
 
     /**
@@ -446,6 +493,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getSeoBreadcrumbs() : ?array
     {
+        if(is_null($this->get()))
+        {
+            return [];
+        }
+
         try{
             $index = 0;
             $property = ResponseDefinitionInterface::BOXALINO_PARAMETER_SEO_BREADCRUMBS;
@@ -453,12 +505,9 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return json_decode($this->get()->advanced->$index->$property->value, true);
             }
-
-            return [];
-        } catch(\Throwable $exception)
-        {
-            return [];
-        }
+        } catch(\Throwable $exception) {}
+        
+        return [];
     }
 
     /**
@@ -467,6 +516,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     protected function getPropertyByPrefix(string $prefix) : \ArrayIterator
     {
+        if(is_null($this->get()))
+        {
+            return new \ArrayIterator();
+        }
+
         $index = 0;
         $dataAsObject = new \ReflectionObject($this->get()->advanced->$index);
         $properties = $dataAsObject->getProperties();
@@ -494,7 +548,12 @@ class ResponseDefinition implements ResponseDefinitionInterface
             $this->data = json_decode($this->json);
         }
 
-        return $this->data;
+        if(is_object($this->data))
+        {
+            return $this->data;
+        }
+
+        return null;
     }
 
     /**
