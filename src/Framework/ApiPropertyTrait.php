@@ -71,7 +71,7 @@ trait ApiPropertyTrait
     public function getPropertySQLReplaceCondition(string $propertyName) : string
     {
         $replaceString = '_';
-        $replacedCharacters =['\\\\', '+', '-', '!', '(', ')', ':', '^', '[' , ']', '"', '{' , '}', '~', '*', '?', '|', '&', ';' , '/', ','];
+        $replacedCharacters =['\\\\', '+', '-', '!', '(', ')', ':', '^', '[' , ']', '"', '{' , '}', '~', '*', '?', '|', '&', ';' , '/', ',', '.'];
         $replaceCondition = "REPLACE($propertyName, ' ', '_')";
         foreach($replacedCharacters as $character)
         {
