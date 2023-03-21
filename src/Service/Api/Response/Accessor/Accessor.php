@@ -56,7 +56,7 @@ class Accessor implements AccessorInterface
         {
             try{
                 return $this->$key;
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
                 throw new UndefinedPropertyError("BoxalinoAPI: the property $key is not available in the " . get_called_class());
             }
@@ -74,7 +74,7 @@ class Accessor implements AccessorInterface
                 }
 
                 return false;
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
             }
         }

@@ -47,12 +47,12 @@ class FacetValue extends Accessor
     /**
      * @var string
      */
-    protected $minValue = 0;
+    protected $minValue = "0";
 
     /**
      * @var string
      */
-    protected $maxValue = 0;
+    protected $maxValue = "0";
 
     /**
      * @var string|null

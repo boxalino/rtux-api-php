@@ -28,6 +28,11 @@ interface RequestDefinitionInterface extends \JsonSerializable
     public const BOXALINO_API_WIDGET_INSPECT_FLAG="_bx_inspect_widget";
 
     /**
+     * URL parameter to change view mode in "test:true"
+     */
+    public const BOXALINO_API_TEST_INSPECT_FLAG="_bx_inspect_test";
+
+    /**
      * @param FilterDefinition ...$filterDefinitions
      * @return $this
      */
@@ -179,6 +184,11 @@ interface RequestDefinitionInterface extends \JsonSerializable
      * @return bool
      */
     public function isInspectMode() : bool;
+
+    /**
+     * @return bool
+     */
+    public function isTestInspectMode() : bool;
 
     /**
      * @return string
