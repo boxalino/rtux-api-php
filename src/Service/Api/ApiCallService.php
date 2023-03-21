@@ -68,7 +68,9 @@ class ApiCallService implements ApiCallServiceInterface
     {
         try {
             $this->responseDefinition->reset();
+            $this->updateApiRequestOptions($apiRequest);
             $this->setFallback(false);
+
             $request = new Request(
                 'POST',
                 $this->getApiEndpoint($restApiEndpoint, $apiRequest->getProfileId()),
@@ -92,7 +94,7 @@ class ApiCallService implements ApiCallServiceInterface
             $this->addInspect($apiRequest, $restApiEndpoint);
 
             return $this->getApiResponse();
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             $this->setFallback(true);
             $this->setFallbackMessage($exception->getMessage());
@@ -117,6 +119,31 @@ class ApiCallService implements ApiCallServiceInterface
             $log->inspect($restApiEndpoint, $apiRequest, $this->getApiResponse());
 
             exit;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param RequestDefinitionInterface $apiRequest
+     * @return $this
+     */
+    public function updateApiRequestOptions(RequestDefinitionInterface &$apiRequest) : self
+    {
+        $this->viewAsTest($apiRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RequestDefinitionInterface $apiRequest
+     * @return self
+     */
+    protected function viewAsTest(RequestDefinitionInterface &$apiRequest) : self
+    {
+        if($apiRequest->isTestInspectMode())
+        {
+            $apiRequest->setTest(true);
         }
 
         return $this;
