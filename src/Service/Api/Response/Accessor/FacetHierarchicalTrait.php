@@ -49,6 +49,7 @@ trait FacetHierarchicalTrait
     /**
      * @param array $values
      * @param int $level
+     * @param string|null $parentId
      * @return void
      */
     protected function _buildTree($value, int $level, ?string $parentId = null)

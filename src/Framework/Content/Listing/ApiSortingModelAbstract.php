@@ -102,6 +102,25 @@ abstract class ApiSortingModelAbstract
     }
 
     /**
+     * Adds mapping between a system field definition (as inserted via local e-shop tagging)
+     * and a valid Boxalino field
+     * (ex: price => discountedPrice, etc)
+     *
+     * @param array $mappings
+     * @return $this
+     */
+    public function addAdditional(array $mappings)
+    {
+        foreach($mappings as $selectedSortField => $boxalinoField)
+        {
+            $this->additionalSortingMapRequest->offsetSet($selectedSortField, $boxalinoField);
+            $this->additionalSortingMapResponse->offsetSet($boxalinoField, $selectedSortField);
+        }
+
+        return $this;
+    }
+
+    /**
      * Adds sorting options by design
      * (explicit structure)
      *
@@ -131,7 +150,9 @@ abstract class ApiSortingModelAbstract
     {
         foreach($additionalSortingList as $field => $sortDefinition)
         {
-            $this->additionalSortings[$field] = new ApiSortingOption($sortDefinition);
+            $sortingOption = new ApiSortingOption($sortDefinition);
+            $this->addAdditional([$sortingOption->getField() => $sortingOption->getApiField()]);
+            $this->additionalSortings[$field] = $sortingOption;
         }
 
         return $this;
@@ -338,7 +359,11 @@ abstract class ApiSortingModelAbstract
      */
     public function load(): void
     {
-        $this->loadPropertiesToObject($this, ["sortings"], ["addSortingOptionCollection", "getSortings"]);
+        $this->loadPropertiesToObject(
+            $this,
+            ["sortings"],
+            ["addSortingOptionCollection", "getSortings", "addAdditionalSortingOptionCollection", "getAdditional", "hasAdditional"]
+        );
     }
 
     /**

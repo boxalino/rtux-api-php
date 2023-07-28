@@ -18,6 +18,11 @@ class ApiBasePage implements ApiResponseViewInterface
     protected $blocks;
 
     /**
+     * @var \ArrayIterator
+     */
+    protected $correlations;
+
+    /**
      * @var string
      */
     protected $groupBy;

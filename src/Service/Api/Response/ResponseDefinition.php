@@ -114,6 +114,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
                 {
                     return $this->get()->system->mainHitCount;
                 }
+                
                 throw new UndefinedPropertyError("BoxalinoAPI Logical Branch switch.");
             } catch(UndefinedPropertyError $exception)
             {
@@ -155,7 +156,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->redirect_url;
             }
-        } catch(\Exception $exception){}
+        } catch(\Throwable $exception) {}
 
         return null;
     }
@@ -175,7 +176,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return (bool) $this->get()->system->correctedSearchQuery;
             }
-        } catch(\Exception $exception){}
+        } catch(\Throwable $exception) {}
 
         return false;
     }
@@ -195,8 +196,8 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->system->correctedSearchQuery;
             }
-        } catch(\Exception $exception){}
-
+        } catch(\Throwable $exception) {}
+        
         return null;
     }
 
@@ -215,8 +216,8 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return (bool) $this->get()->system->hasSearchSubPhrases;
             }
-        } catch(\Exception $exception) {}
-
+        } catch(\Throwable $exception) {}
+        
         return false;
     }
 
@@ -236,7 +237,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->_bx_request_id;
             }
-        } catch(\Throwable $exception){}
+        } catch(\Throwable $exception) {}
 
         return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
     }
@@ -257,7 +258,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->_bx_group_by;
             }
-        } catch(\Throwable $exception){}
+        } catch(\Throwable $exception) {}
 
         return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
     }
@@ -278,7 +279,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->_bx_variant_uuid;
             }
-        } catch(\Throwable $exception){}
+        } catch(\Throwable $exception) {}
 
         return ResponseDefinitionInterface::BOXALINO_DEFAULT_VALUE;
     }
@@ -290,7 +291,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
     {
         if(is_null($this->blocks))
         {
-            $this->blocks = $this->getContentByType("blocks");
+            $this->blocks = $this->getContentByType(ResponseDefinitionInterface::BOXALINO_PARAMETER_BLOCKS);
         }
 
         return $this->blocks;
@@ -334,7 +335,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
      */
     public function getBlockObject(\StdClass $block) : AccessorInterface
     {
-        return $this->toObject($block, $this->getAccessorHandler()->getAccessor("blocks"));
+        return $this->toObject($block, $this->getAccessorHandler()->getAccessor(ResponseDefinitionInterface::BOXALINO_PARAMETER_BLOCKS));
     }
 
     /**
@@ -421,9 +422,10 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->$property;
             }
-        } catch(\Throwable $exception){}
+        } catch(\Throwable $exception) {}
 
         return null;
+        
     }
 
     /**
@@ -443,8 +445,8 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->$property;
             }
-        } catch(\Throwable $exception){}
-
+        } catch(\Throwable $exception) {}
+        
         return null;
     }
 
@@ -466,7 +468,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
                 return json_decode($this->get()->advanced->$index->$property->value, true);
             }
         } catch(\Throwable $exception) {}
-
+        
         return [];
     }
 

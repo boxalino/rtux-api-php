@@ -35,19 +35,19 @@ interface RequestDefinitionInterface extends \JsonSerializable
      * @param FilterDefinition ...$filterDefinitions
      * @return $this
      */
-    public function addFilters(FilterDefinition ...$filterDefinitions) : RequestDefinition ;
+    public function addFilters(FilterDefinition ...$filterDefinitions) : RequestDefinitionInterface ;
 
     /**
      * @param SortingDefinition ...$sortingDefinitions
      * @return $this
      */
-    public function addSort(SortingDefinition ...$sortingDefinitions) : RequestDefinition ;
+    public function addSort(SortingDefinition ...$sortingDefinitions) : RequestDefinitionInterface ;
 
     /**
      * @param FacetDefinition ...$facetDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
-    public function addFacets(FacetDefinition ...$facetDefinitions) : RequestDefinition;
+    public function addFacets(FacetDefinition ...$facetDefinitions) : RequestDefinitionInterface;
 
     /**
      * @param HeaderParameterDefinition ...$headerParameterDefinitions
@@ -63,39 +63,39 @@ interface RequestDefinitionInterface extends \JsonSerializable
 
     /**
      * @param string $apiSecret
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setApiSecret(string $apiSecret) : RequestDefinition;
+    public function setApiSecret(string $apiSecret) : RequestDefinitionInterface;
 
     /**
      * @param bool $dev
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setDev(bool $dev) : RequestDefinition;
+    public function setDev(bool $dev) : RequestDefinitionInterface;
 
     /**
      * @param bool $test
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setTest(bool $test) : RequestDefinition;
+    public function setTest(bool $test) : RequestDefinitionInterface;
 
     /**
      * @param string $language
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setLanguage(string $language) : RequestDefinition;
+    public function setLanguage(string $language) : RequestDefinitionInterface;
 
     /**
      * @param string $sessionId
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setSessionId(string $sessionId) : RequestDefinition;
+    public function setSessionId(string $sessionId) : RequestDefinitionInterface;
 
     /**
      * @param string $profileId
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setProfileId(string $profileId) : RequestDefinition;
+    public function setProfileId(string $profileId) : RequestDefinitionInterface;
 
     /**
      * @return string
@@ -104,69 +104,69 @@ interface RequestDefinitionInterface extends \JsonSerializable
 
     /**
      * @param string $customerId
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setCustomerId(string $customerId) : RequestDefinition;
+    public function setCustomerId(string $customerId) : RequestDefinitionInterface;
 
     /**
      * @param string $widget
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setWidget(string $widget) : RequestDefinition;
+    public function setWidget(string $widget) : RequestDefinitionInterface;
 
     /**
      * @param int $hitCount
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setHitCount(int $hitCount) : RequestDefinition;
+    public function setHitCount(int $hitCount) : RequestDefinitionInterface;
 
     /**
      * @param int $offset
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setOffset(int $offset) : RequestDefinition;
+    public function setOffset(int $offset) : RequestDefinitionInterface;
 
     /**
      * @param string $groupBy
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setGroupBy(string $groupBy) : RequestDefinition;
+    public function setGroupBy(string $groupBy) : RequestDefinitionInterface;
 
     /**
      * @param string $query
      * @return $this
      */
-    public function setQuery(string $query) : RequestDefinition;
+    public function setQuery(string $query) : RequestDefinitionInterface;
 
     /**
      * @param array $returnFields
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setReturnFields(array $returnFields) : RequestDefinition;
+    public function setReturnFields(array $returnFields) : RequestDefinitionInterface;
 
     /**
      * @param bool $orFilters
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setOrFilters(bool $orFilters) : RequestDefinition;
+    public function setOrFilters(bool $orFilters) : RequestDefinitionInterface;
 
     /**
      * @param array $parameters
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setParameters(array $parameters): RequestDefinition;
+    public function setParameters(array $parameters): RequestDefinitionInterface;
 
     /**
      * @param string $username
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setUsername(string $username) : RequestDefinition;
+    public function setUsername(string $username) : RequestDefinitionInterface;
 
     /**
      * @param string $apiKey
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
-    public function setApiKey(string $apiKey) : RequestDefinition;
+    public function setApiKey(string $apiKey) : RequestDefinitionInterface;
 
     /**
      * @return string
@@ -177,6 +177,11 @@ interface RequestDefinitionInterface extends \JsonSerializable
      * @return bool
      */
     public function isInspectMode() : bool;
+
+    /**
+     * @return bool
+     */
+    public function isTestInspectMode() : bool;
 
     /**
      * @return string

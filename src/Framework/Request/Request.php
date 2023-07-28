@@ -128,7 +128,8 @@ class Request implements RequestInterface
 
     /**
      * @param string $key
-     * @param null $default
+     * @param string | null $default
+     * @return mixed
      */
     public function getParam(string $key, $default = null)
     {

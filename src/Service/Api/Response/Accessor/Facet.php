@@ -75,11 +75,6 @@ class Facet extends Accessor
     protected $valueorderEnums = null;
 
     /**
-     * @var bool
-     */
-    protected $finderFacet = false;
-
-    /**
      * Front-End visualisation (display/template) of the facet
      * as selected from the Boxalino Intelligence Admin Merchandising >> Facets
      * @var string
@@ -354,24 +349,6 @@ class Facet extends Accessor
         $this->_natsortFacetValues();
         $this->_storeSortFacetValues();
 
-        return $this;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isFinderFacet(): bool
-    {
-        return $this->finderFacet;
-    }
-
-    /**
-     * @param bool $finderFacet
-     * @return Facet
-     */
-    public function setFinderFacet(bool $finderFacet): Facet
-    {
-        $this->finderFacet = $finderFacet;
         return $this;
     }
 
@@ -653,10 +630,10 @@ class Facet extends Accessor
     }
 
     /**
-     * @param string $prefix
+     * @param string | null $prefix
      * @return $this
      */
-    public function setFieldPrefix(string $prefix) : Facet
+    public function setFieldPrefix(?string $prefix = null) : Facet
     {
         $this->fieldPrefix = $prefix;
         return $this;
@@ -698,5 +675,5 @@ class Facet extends Accessor
         return $this->resetOnRemove;
     }
 
-
+    
 }

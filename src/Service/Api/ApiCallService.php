@@ -20,7 +20,12 @@ class ApiCallService implements ApiCallServiceInterface
     /**
      * @var Client
      */
-    private $restClient;
+    protected $restClient;
+
+    /**
+     * @var bool
+     */
+    protected $compress = false;
 
     /**
      * @var ResponseDefinition
@@ -54,7 +59,6 @@ class ApiCallService implements ApiCallServiceInterface
      */
     public function __construct(LoggerInterface $logger, ResponseDefinitionInterface $responseDefinition)
     {
-        $this->restClient = new Client();
         $this->logger = $logger;
         $this->responseDefinition = $responseDefinition;
     }
@@ -87,7 +91,7 @@ class ApiCallService implements ApiCallServiceInterface
             }
 
             /** @var  \GuzzleHttp\Psr7\Response $response */
-            $response = $this->restClient->send($request);
+            $response = $this->getRestClient()->send($request);
             $this->setApiResponse($this->responseDefinition->setResponse($response));
 
             /** in case of successfull request & the request is done in inspect-mode - log both the API request & API response */
@@ -104,6 +108,25 @@ class ApiCallService implements ApiCallServiceInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return Client
+     */
+    public function getRestClient() : Client
+    {
+        if(!$this->restClient)
+        {
+            $options = [];
+            if($this->isCompress())
+            {
+                $options = ['decode_content' => 'gzip'];
+            }
+
+            $this->restClient = new Client($options);
+        }
+
+        return $this->restClient;
     }
 
     /**
@@ -157,6 +180,24 @@ class ApiCallService implements ApiCallServiceInterface
     public function getApiEndpoint(string $restApiEndpoint, string $profileId)
     {
         return stripslashes($restApiEndpoint) . "?profileId=$profileId";
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompress(): bool
+    {
+        return $this->compress;
+    }
+
+    /**
+     * @param bool $compress
+     * @return self
+     */
+    public function setCompress(bool $compress): self
+    {
+        $this->compress = $compress;
+        return $this;
     }
 
     /**

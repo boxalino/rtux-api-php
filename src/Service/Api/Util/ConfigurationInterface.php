@@ -17,7 +17,9 @@ interface ConfigurationInterface
     public const BOXALINO_API_SERVER_STAGE="//r-st.bx-cloud.com/track/v2";
     public const RTUX_API_DOMAIN_MAIN="bx-cloud";
     public const RTUX_API_DOMAIN_ALTERNATIVE="wi-platform-cloud";
-
+    public const BOXALINO_API_RTI_PRODUCTION="//track.bx-cloud.com/static/rti.min.js";
+    public const BOXALINO_API_RTI_STAGE="//r-st.bx-cloud.com/static/rti.min.js";
+    
     /**
      * The API endpoint depends on the testing conditionals and on the data index
      *

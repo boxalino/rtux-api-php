@@ -25,9 +25,9 @@ class FacetValue extends Accessor
     protected $label = null;
 
     /**
-     * @var string
+     * @var string | null
      */
-    protected $id;
+    protected $id = null;
 
     /**
      * @var int
@@ -103,9 +103,9 @@ class FacetValue extends Accessor
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->label ?? $this->getValue();
     }
@@ -121,9 +121,9 @@ class FacetValue extends Accessor
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -287,7 +287,7 @@ class FacetValue extends Accessor
      */
     public function getPath(): array
     {
-        return $this->path;
+        return $this->path ?? [];
     }
 
     /**

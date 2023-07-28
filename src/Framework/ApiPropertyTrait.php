@@ -47,7 +47,7 @@ trait ApiPropertyTrait
      */
     public function sanitizePropertyName(string $property) : string
     {
-        return preg_replace("/[\s\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
+        return preg_replace("/[\s\.\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
     }
 
     /**
@@ -58,7 +58,7 @@ trait ApiPropertyTrait
     {
         array_walk($properties, function($property)
         {
-            return preg_replace("/[\s\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
+            return preg_replace("/[\s\.\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
         });
 
         return $properties;
@@ -71,7 +71,7 @@ trait ApiPropertyTrait
     public function getPropertySQLReplaceCondition(string $propertyName) : string
     {
         $replaceString = '_';
-        $replacedCharacters =['\\\\', '+', '-', '!', '(', ')', ':', '^', '[' , ']', '"', '{' , '}', '~', '*', '?', '|', '&', ';' , '/', ','];
+        $replacedCharacters =['\\\\', '+', '-', '!', '(', ')', ':', '^', '[' , ']', '"', '{' , '}', '~', '*', '?', '|', '&', ';' , '/', ',', '.'];
         $replaceCondition = "REPLACE($propertyName, ' ', '_')";
         foreach($replacedCharacters as $character)
         {
@@ -85,6 +85,11 @@ trait ApiPropertyTrait
      * @param string | null $facetPrefix
      */
     abstract public function getFacetPrefix(): ?string;
+
+    /**
+     * @return array
+     */
+    abstract public function getFilterablePropertyNames() : array;
 
 
 }

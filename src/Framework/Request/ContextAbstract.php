@@ -336,7 +336,7 @@ abstract class ContextAbstract
      */
     public function getFacetPrefix(): ?string
     {
-        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
+        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_SYSTEM_FACET_PREFIX;
     }
 
     /**
