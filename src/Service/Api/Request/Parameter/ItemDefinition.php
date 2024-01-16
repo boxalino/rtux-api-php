@@ -10,6 +10,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterDefinition;
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter
  */
+#[\AllowDynamicProperties]
 class ItemDefinition extends ParameterDefinition
 {
 

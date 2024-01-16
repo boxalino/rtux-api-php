@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Response
  */
+#[\AllowDynamicProperties]
 class ResponseDefinition implements ResponseDefinitionInterface
 {
 
@@ -119,7 +120,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
                 {
                     return $this->get()->system->mainHitCount;
                 }
-                
+
                 throw new UndefinedPropertyError("BoxalinoAPI Logical Branch switch.");
             } catch(UndefinedPropertyError $exception)
             {

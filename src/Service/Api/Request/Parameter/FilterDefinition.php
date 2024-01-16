@@ -7,6 +7,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterDefinition;
  * Class FilterDefinition
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Request
  */
+#[\AllowDynamicProperties]
 class FilterDefinition extends ParameterDefinition
 {
 

@@ -12,6 +12,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterDefinition;
  * Any additional parameters can be added
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Request
  */
+#[\AllowDynamicProperties]
 class HeaderParameterDefinition extends ParameterDefinition
 {
 

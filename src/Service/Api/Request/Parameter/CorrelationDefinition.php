@@ -14,6 +14,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterDefinition;
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Request
  */
+#[\AllowDynamicProperties]
 class CorrelationDefinition extends ParameterDefinition
 {
 

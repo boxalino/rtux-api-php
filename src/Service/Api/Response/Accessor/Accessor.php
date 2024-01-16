@@ -8,6 +8,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\UndefinedPropertyErr
 /**
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor
  */
+#[\AllowDynamicProperties]
 class Accessor implements AccessorInterface
 {
     use ResponseHydratorTrait;

@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
  * Class ParameterDefinition
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Request
  */
+#[\AllowDynamicProperties]
 class ParameterDefinition implements ParameterInterface
 {
     /**
