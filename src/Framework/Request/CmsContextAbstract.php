@@ -67,11 +67,6 @@ abstract class CmsContextAbstract
      */
     public function addFacets(RequestInterface $request): ListingContextAbstract
     {
-        if($this->getProperty("applyRequestParams"))
-        {
-            return parent::addFacets($request);
-        }
-
         if($this->has("facets"))
         {
             $configuredFacets = explode(",", $this->getProperty("facets"));
@@ -87,6 +82,11 @@ abstract class CmsContextAbstract
                         ->addWithValues($params[0], array_map("html_entity_decode",  explode("|", $params[1])))
                 );
             }
+        }
+
+        if($this->getProperty("applyRequestParams"))
+        {
+            parent::addFacets($request);
         }
 
         return $this;

@@ -12,6 +12,7 @@ interface AccessorFacetModelInterface extends AccessorModelInterface
     const BOXALINO_SYSTEM_FACET_PREFIX = "bx_";
     const BOXALINO_API_FACET_PREFIX = "api_";
     const BOXALINO_BQ_FACET_PREFIX = "bq_";
+    const SELECTED_FACET_VALUES_URL_DELIMITER = "|";
 
     /**
      * @return ArrayIterator

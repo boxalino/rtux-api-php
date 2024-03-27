@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Request;
 
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
 
 /**
  * Class ContextAbstract
@@ -71,6 +71,36 @@ abstract class ContextAbstract
     protected $facetPrefix = null;
 
     /**
+     * @var bool
+     */
+    protected $useCategoriesFilter = false;
+
+    /**
+     * @var bool
+     */
+    protected $useFilterByFacetOptionId = false;
+
+    /**
+     * @var bool
+     */
+    protected $useFilterByUrlKey = false;
+
+    /**
+     * @var null | string
+     */
+    protected $facetValueKeyFilter = null;
+
+    /**
+     * @var null | string
+     */
+    protected $facetValueCorrelation = null;
+
+    /**
+     * @var string | null
+     */
+    protected $diFieldPrefix = null;
+
+    /**
      * Listing constructor.
      *
      * @param RequestTransformerInterface $requestTransformer
@@ -103,6 +133,7 @@ abstract class ContextAbstract
             ->setGroupBy($this->getGroupBy())
             ->setWidget($this->getWidget());
 
+        $this->addCorrelations($request);
         $this->addFilters($request);
         $this->addContextParameters($request);
         $this->addSort($request);
@@ -130,6 +161,34 @@ abstract class ContextAbstract
     public function addSort(RequestInterface $request) : void
     {
         return;
+    }
+
+    /**
+     * Adding a correlation on the request
+     * Redefine in a context that allows flexible update of the request
+     *
+     * ex: $this->getApiRequest()->addCorrelations($this->getCategoriesCorrelation($request));
+     *
+     * @param RequestInterface $request
+     */
+    public function addCorrelations(RequestInterface $request) : void
+    {
+        return;
+    }
+
+    /**
+     * Sample on how to generate a correlation definition element
+     * to be added in the API request
+     *
+     * Review Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition
+     *
+     * @param RequestInterface $request
+     * @return CorrelationDefinition
+     */
+    protected function getCategoriesCorrelation(RequestInterface $request) : CorrelationDefinition
+    {
+        return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_CORRELATION)
+            ->add("categories");
     }
 
     /**
@@ -303,11 +362,29 @@ abstract class ContextAbstract
     }
 
     /**
-     * @param string $facetPrefix
+     * @return string | null
      */
-    public function getFacetPrefix(): string
+    public function getFacetPrefix(): ?string
     {
-        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_API_FACET_PREFIX;
+        return $this->facetPrefix ?? AccessorFacetModelInterface::BOXALINO_SYSTEM_FACET_PREFIX;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFacetValueCorrelation(): string
+    {
+        return $this->facetValueCorrelation ?? FacetDefinition::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX;
+    }
+
+    /**
+     * @param string|null $facetValueCorrelation
+     * @return ContextAbstract
+     */
+    public function setFacetValueCorrelation(?string $facetValueCorrelation): ContextAbstract
+    {
+        $this->facetValueCorrelation = $facetValueCorrelation;
+        return $this;
     }
 
     /**
@@ -339,6 +416,38 @@ abstract class ContextAbstract
             );
         }
 
+        return $this;
+    }
+
+    /**
+     * @param string $param
+     * @return string
+     */
+    public function getPropertyNameWithoutFacetPrefix(string $param) : string
+    {
+        if($this->getFacetPrefix())
+        {
+            if (strpos($param, $this->getFacetPrefix()) === 0)
+            {
+                return substr($param, strlen($this->getFacetPrefix()), strlen($param));
+            }
+        }
+
+        if(is_null($this->diFieldPrefix))
+        {
+            return $param;
+        }
+
+        return $this->diFieldPrefix . $param;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function addDiFieldPrefix(string $value) : self
+    {
+        $this->diFieldPrefix = $value;
         return $this;
     }
 

@@ -25,9 +25,9 @@ class FacetValue extends Accessor
     protected $label = null;
 
     /**
-     * @var string
+     * @var string | null
      */
-    protected $id;
+    protected $id = null;
 
     /**
      * @var int
@@ -47,12 +47,12 @@ class FacetValue extends Accessor
     /**
      * @var string
      */
-    protected $minValue = 0;
+    protected $minValue = "0";
 
     /**
      * @var string
      */
-    protected $maxValue = 0;
+    protected $maxValue = "0";
 
     /**
      * @var string|null
@@ -68,6 +68,21 @@ class FacetValue extends Accessor
      * @var null | string
      */
     protected $minSelectedValue = null;
+
+    /**
+     * @var array
+     */
+    protected $path = [];
+
+    /**
+     * @var string | null
+     */
+    protected $fullLabel = null;
+
+    /**
+     * @var bool
+     */
+    protected $highlighted = false;
 
     /**
      * @return string
@@ -88,9 +103,9 @@ class FacetValue extends Accessor
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getLabel(): string
+    public function getLabel(): ?string
     {
         return $this->label ?? $this->getValue();
     }
@@ -106,9 +121,9 @@ class FacetValue extends Accessor
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -266,5 +281,60 @@ class FacetValue extends Accessor
         $this->minSelectedValue = $minSelectedValue;
         return $this;
     }
+
+    /**
+     * @return array
+     */
+    public function getPath(): array
+    {
+        return $this->path ?? [];
+    }
+
+    /**
+     * @param array $path
+     * @return FacetValue
+     */
+    public function setPath(array $path): FacetValue
+    {
+        $this->path = $path;
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getFullLabel(): ?string
+    {
+        return $this->fullLabel;
+    }
+
+    /**
+     * @param string|null $fullLabel
+     * @return FacetValue
+     */
+    public function setFullLabel(?string $fullLabel): FacetValue
+    {
+        $this->fullLabel = $fullLabel;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isHighlighted(): bool
+    {
+        return $this->highlighted;
+    }
+
+    /**
+     * @param bool $highlighted
+     * @return FacetValue
+     */
+    public function setHighlighted(bool $highlighted): FacetValue
+    {
+        $this->highlighted = $highlighted;
+        return $this;
+    }
+
 
 }

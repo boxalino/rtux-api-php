@@ -10,7 +10,7 @@ use Boxalino\RealTimeUserExperienceApi\Framework\Content\Util\AbstractSimpleObje
  * It`s a recommended base structure for mapping local fields to Boxalino/AI fields
  *
  *
- * @package BoxalinoClientProject\BoxalinoIntegration\Framework\Content\Listing
+ * @package Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing
  */
 class ApiSortingOption extends AbstractSimpleObject
 {

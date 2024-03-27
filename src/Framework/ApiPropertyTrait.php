@@ -18,12 +18,19 @@ trait ApiPropertyTrait
     public function getSelectedFacetsByRequest(RequestInterface $request)
     {
         $facets = [];
+        $position = 0;
+        if($this->getFacetPrefix())
+        {
+            $position = strlen($this->getFacetPrefix());
+        }
+
         foreach($request->getParams() as $param => $values)
         {
-            //it`s a store property - has the allowed filters prefix
-            if(strpos($param, $this->getFacetPrefix()) === 0)
+            //it`s a Boxalino property - has the allowed filters prefix
+            if ($this->isParamAllowedAsFilter($param))
             {
-                $facets[] = substr($param, strlen($this->getFacetPrefix()), strlen($param));
+                $facets[] = substr($param, $position, strlen($param));
+                continue;
             }
         }
 
@@ -40,7 +47,7 @@ trait ApiPropertyTrait
      */
     public function sanitizePropertyName(string $property) : string
     {
-        return preg_replace("/[\s\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
+        return preg_replace("/[\s\.\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
     }
 
     /**
@@ -51,7 +58,7 @@ trait ApiPropertyTrait
     {
         array_walk($properties, function($property)
         {
-            return preg_replace("/[\s\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
+            return preg_replace("/[\s\.\'\,\-\+\/\!\[\]\)\(\:\^\"\{\}\~\*\?\|\&\;\,\\\]/", '_', $property);
         });
 
         return $properties;
@@ -64,7 +71,7 @@ trait ApiPropertyTrait
     public function getPropertySQLReplaceCondition(string $propertyName) : string
     {
         $replaceString = '_';
-        $replacedCharacters =['\\\\', '+', '-', '!', '(', ')', ':', '^', '[' , ']', '"', '{' , '}', '~', '*', '?', '|', '&', ';' , '/', ','];
+        $replacedCharacters =['\\\\', '+', '-', '!', '(', ')', ':', '^', '[' , ']', '"', '{' , '}', '~', '*', '?', '|', '&', ';' , '/', ',', '.'];
         $replaceCondition = "REPLACE($propertyName, ' ', '_')";
         foreach($replacedCharacters as $character)
         {
@@ -75,9 +82,14 @@ trait ApiPropertyTrait
     }
 
     /**
-     * @param string $facetPrefix
+     * @param string | null $facetPrefix
      */
-    abstract public function getFacetPrefix(): string;
+    abstract public function getFacetPrefix(): ?string;
+
+    /**
+     * @return array
+     */
+    abstract public function getFilterablePropertyNames() : array;
 
 
 }

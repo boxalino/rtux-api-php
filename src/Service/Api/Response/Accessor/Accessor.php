@@ -25,9 +25,20 @@ class Accessor implements AccessorInterface
     /** @var string | null */
     protected $bxContent = null;
 
+    /** @var array  */
+    protected $_accessorData = [];
+
     public function __construct(AccessorHandlerInterface $accessorHandler)
     {
         $this->accessorHandler = $accessorHandler;
+    }
+
+    /**
+     * Required for serialization (pre-cache processing)
+     */
+    public function __sleep()
+    {
+        return ["bxContent", "_accessorData"];
     }
 
     /**
@@ -45,7 +56,7 @@ class Accessor implements AccessorInterface
         {
             try{
                 return $this->$key;
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
                 throw new UndefinedPropertyError("BoxalinoAPI: the property $key is not available in the " . get_called_class());
             }
@@ -63,7 +74,7 @@ class Accessor implements AccessorInterface
                 }
 
                 return false;
-            } catch (\Exception $exception)
+            } catch (\Throwable $exception)
             {
             }
         }
@@ -95,6 +106,58 @@ class Accessor implements AccessorInterface
         {
             // do nothing
         }
+    }
+
+    /**
+     * Sets either accessor objects or accessor fields to the response object
+     *
+     * @param string $propertyName
+     * @param $content
+     * @return $this
+     */
+    public function add(string $propertyName, $content)
+    {
+        $this->$propertyName[] = $content;
+        return $this;
+    }
+
+    /**
+     * @param string | array | \StdClass $data
+     * @return AccessorInterface
+     */
+    public function _addAccessorData($data) : AccessorInterface
+    {
+        if(is_object($data))
+        {
+            $data = json_encode($data, true);
+        }
+
+        if(json_decode($data, true))
+        {
+            $data = json_decode($data, true);
+        }
+
+        if(!is_array($data))
+        {
+            $data = [$data];
+        }
+
+        $this->_accessorData = $data;
+        return $this;
+    }
+
+    /**
+     * @param string $key
+     * @return mixed|null
+     */
+    public function _getFromData(string $key)
+    {
+        if(isset($this->_accessorData[$key]))
+        {
+            return $this->_accessorData[$key];
+        }
+
+        return null;
     }
 
     /**

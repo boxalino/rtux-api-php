@@ -14,6 +14,12 @@ class Facet extends Accessor
     implements AccessorInterface
 {
 
+    use FacetTrait;
+    use FacetHierarchicalTrait;
+
+    public const RTUX_API_FACET_CATEGORIES = "categories";
+    public const RTUX_API_FACET_CATEGORY = "category_id";
+
     /**
      * @var string
      */
@@ -64,14 +70,9 @@ class Facet extends Accessor
      * As selected from the Boxalino Intelligence Admin Merchandising >> Facets
      *
      * @var string
-     * alphabetical | counter | custom | 2 (store system order)
+     * alphabetical | counter | custom | 2 (store system order) | natural
      */
     protected $valueorderEnums = null;
-
-    /**
-     * @var bool
-     */
-    protected $finderFacet = false;
 
     /**
      * Front-End visualisation (display/template) of the facet
@@ -171,6 +172,11 @@ class Facet extends Accessor
     protected $fieldPrefix;
 
     /**
+     * @var bool
+     */
+    protected $resetOnRemove = false;
+
+    /**
      * @return string
      */
     public function getField(): string
@@ -184,7 +190,7 @@ class Facet extends Accessor
      */
     public function setField(string $field): Facet
     {
-        $this->field = $field;
+        $this->field = $this->_apiMapField($field);
         return $this;
     }
 
@@ -220,22 +226,12 @@ class Facet extends Accessor
      */
     public function setValues(array $values): Facet
     {
-        $this->values = new \ArrayIterator();
-        foreach($values as $index => $value)
+        if(in_array($this->getField(), [self::RTUX_API_FACET_CATEGORY, self::RTUX_API_FACET_CATEGORIES]))
         {
-            /** @var FacetValue $facetValueEntity */
-            $facetValueEntity = $this->toObject($value,  $this->getAccessorHandler()->getAccessor("facetValue"));
-            if($this->getEnumDisplayMaxSize() || $this->getEnumDisplaySize())
-            {
-                if($index > $this->getEnumDisplaySize() || $index > $this->getEnumDisplayMaxSize())
-                {
-                    $facetValueEntity->setShow(false);
-                }
-            }
-            $this->values->append($facetValueEntity);
+            return $this->_setValuesHierarchical($values);
         }
 
-        return $this;
+        return $this->_setValues($values);
     }
 
     /**
@@ -343,24 +339,16 @@ class Facet extends Accessor
     public function setValueorderEnums(string $valueorderEnums): Facet
     {
         $this->valueorderEnums = $valueorderEnums;
-        return $this;
-    }
 
-    /**
-     * @return bool
-     */
-    public function isFinderFacet(): bool
-    {
-        return $this->finderFacet;
-    }
+        if($this->getField() === self::RTUX_API_FACET_CATEGORY)
+        {
+            $this->_sortHierarchicalFacetValues();
+            return $this;
+        }
 
-    /**
-     * @param bool $finderFacet
-     * @return Facet
-     */
-    public function setFinderFacet(bool $finderFacet): Facet
-    {
-        $this->finderFacet = $finderFacet;
+        $this->_natsortFacetValues();
+        $this->_storeSortFacetValues();
+
         return $this;
     }
 
@@ -642,10 +630,10 @@ class Facet extends Accessor
     }
 
     /**
-     * @param string $prefix
+     * @param string | null $prefix
      * @return $this
      */
-    public function setFieldPrefix(string $prefix) : Facet
+    public function setFieldPrefix(?string $prefix = null) : Facet
     {
         $this->fieldPrefix = $prefix;
         return $this;
@@ -667,6 +655,24 @@ class Facet extends Accessor
         }
 
         return $this->selectedValues;
+    }
+
+    /**
+     * @param bool $resetOnRemove
+     * @return Facet
+     */
+    public function setResetOnRemove(bool $resetOnRemove): Facet
+    {
+        $this->resetOnRemove = $resetOnRemove;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isResetOnRemove(): bool
+    {
+        return $this->resetOnRemove;
     }
 
 }

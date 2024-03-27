@@ -20,7 +20,12 @@ class ApiCallService implements ApiCallServiceInterface
     /**
      * @var Client
      */
-    private $restClient;
+    protected $restClient;
+
+    /**
+     * @var bool
+     */
+    protected $compress = false;
 
     /**
      * @var ResponseDefinition
@@ -54,7 +59,6 @@ class ApiCallService implements ApiCallServiceInterface
      */
     public function __construct(LoggerInterface $logger, ResponseDefinitionInterface $responseDefinition)
     {
-        $this->restClient = new Client();
         $this->logger = $logger;
         $this->responseDefinition = $responseDefinition;
     }
@@ -68,7 +72,9 @@ class ApiCallService implements ApiCallServiceInterface
     {
         try {
             $this->responseDefinition->reset();
+            $this->updateApiRequestOptions($apiRequest);
             $this->setFallback(false);
+
             $request = new Request(
                 'POST',
                 $this->getApiEndpoint($restApiEndpoint, $apiRequest->getProfileId()),
@@ -81,18 +87,18 @@ class ApiCallService implements ApiCallServiceInterface
             /** when a request is done in test mode - log the API request */
             if($apiRequest->isTest())
             {
-                $this->logger->info("Boxalino API request: " . $apiRequest->jsonSerialize());
+                $this->logger->alert("Boxalino API request: " . $apiRequest->jsonSerialize());
             }
 
             /** @var  \GuzzleHttp\Psr7\Response $response */
-            $response = $this->restClient->send($request);
+            $response = $this->getRestClient()->send($request);
             $this->setApiResponse($this->responseDefinition->setResponse($response));
 
             /** in case of successfull request & the request is done in inspect-mode - log both the API request & API response */
             $this->addInspect($apiRequest, $restApiEndpoint);
 
             return $this->getApiResponse();
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             $this->setFallback(true);
             $this->setFallbackMessage($exception->getMessage());
@@ -105,6 +111,25 @@ class ApiCallService implements ApiCallServiceInterface
     }
 
     /**
+     * @return Client
+     */
+    public function getRestClient() : Client
+    {
+        if(!$this->restClient)
+        {
+            $options = [];
+            if($this->isCompress())
+            {
+                $options = ['decode_content' => 'gzip'];
+            }
+
+            $this->restClient = new Client($options);
+        }
+
+        return $this->restClient;
+    }
+
+    /**
      * @param RequestDefinitionInterface $apiRequest
      * @param string $restApiEndpoint
      * @return self
@@ -113,11 +138,35 @@ class ApiCallService implements ApiCallServiceInterface
     {
         if($apiRequest->isInspectMode())
         {
-            $widget = $apiRequest->getWidget();
+            $log = new Log();
+            $log->inspect($restApiEndpoint, $apiRequest, $this->getApiResponse());
 
-            header('BOXALINO_API_ENDPOINT_' . $widget .': '. $restApiEndpoint);
-            header('BOXALINO_API_REQUEST_'. $widget .': '. $apiRequest->setApiSecret("********************")->jsonSerialize());
-            header('BOXALINO_API_RESPONSE_'. $widget .': '. $this->getApiResponse()->getJson());
+            exit;
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param RequestDefinitionInterface $apiRequest
+     * @return $this
+     */
+    public function updateApiRequestOptions(RequestDefinitionInterface &$apiRequest) : self
+    {
+        $this->viewAsTest($apiRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RequestDefinitionInterface $apiRequest
+     * @return self
+     */
+    protected function viewAsTest(RequestDefinitionInterface &$apiRequest) : self
+    {
+        if($apiRequest->isTestInspectMode())
+        {
+            $apiRequest->setTest(true);
         }
 
         return $this;
@@ -131,6 +180,24 @@ class ApiCallService implements ApiCallServiceInterface
     public function getApiEndpoint(string $restApiEndpoint, string $profileId)
     {
         return stripslashes($restApiEndpoint) . "?profileId=$profileId";
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompress(): bool
+    {
+        return $this->compress;
+    }
+
+    /**
+     * @param bool $compress
+     * @return self
+     */
+    public function setCompress(bool $compress): self
+    {
+        $this->compress = $compress;
+        return $this;
     }
 
     /**

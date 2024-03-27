@@ -188,7 +188,7 @@ class AccessorHandler implements AccessorHandlerInterface
             }
 
             return $model;
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             throw new MissingDependencyException(
                 "BoxalinoApiAccessor: there was an issue accessing the service/model requested for $type. Original error: " . $exception->getMessage()

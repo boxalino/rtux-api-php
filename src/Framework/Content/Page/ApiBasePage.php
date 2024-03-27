@@ -18,6 +18,11 @@ class ApiBasePage implements ApiResponseViewInterface
     protected $blocks;
 
     /**
+     * @var \ArrayIterator
+     */
+    protected $correlations;
+
+    /**
      * @var string
      */
     protected $groupBy;
@@ -82,8 +87,17 @@ class ApiBasePage implements ApiResponseViewInterface
      */
     public function getBlocks() : \ArrayIterator
     {
-        return $this->blocks;
+        return $this->blocks ?? new \ArrayIterator();
     }
+
+    /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator
+    {
+        return $this->correlations ?? new \ArrayIterator();
+    }
+
 
     /**
      * @return string
@@ -102,6 +116,17 @@ class ApiBasePage implements ApiResponseViewInterface
         $this->blocks = $blocks;
         return $this;
     }
+
+    /**
+     * @param \ArrayIterator $correlations
+     * @return $this
+     */
+    public function setCorrelations(\ArrayIterator $correlations) : ApiResponseViewInterface
+    {
+        $this->correlations = $correlations;
+        return $this;
+    }
+
 
     /**
      * @param string $groupBy

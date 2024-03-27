@@ -8,6 +8,11 @@ interface AccessorInterface
 {
 
     /**
+     *
+     */
+    public const BOXALINO_API_ACCESSOR_PARAMETER = "accessor";
+
+    /**
      * @param \StdClass $data
      * @param AccessorInterface $object
      * @return AccessorInterface
@@ -26,6 +31,21 @@ interface AccessorInterface
      * @return mixed
      */
     public function get(string $parameterName);
+
+    /**
+     * Sets either accessor objects or accessor fields to the response object
+     *
+     * @param string $propertyName
+     * @param $content
+     * @return $this
+     */
+    public function add(string $propertyName, $content);
+
+    /**
+     * @param $data
+     * @return AccessorInterface
+     */
+    public function _addAccessorData($data) : AccessorInterface;
 
     /**
      * Access the Boxalino response attributes for API JS tracker

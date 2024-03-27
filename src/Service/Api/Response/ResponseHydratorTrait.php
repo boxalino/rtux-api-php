@@ -3,6 +3,8 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response;
 
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Facet;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\FacetValue;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Util\AccessorHandlerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\UndefinedPropertyError;
 
@@ -25,6 +27,11 @@ trait ResponseHydratorTrait
      */
     public function toObject(\StdClass $data, AccessorInterface $object) : AccessorInterface
     {
+        if($object instanceof Facet || $object instanceof FacetValue)
+        {
+            $object->_addAccessorData($data);
+        }
+
         $dataAsObject = new \ReflectionObject($data);
         $properties = $dataAsObject->getProperties();
         $class = get_class($object);
@@ -39,7 +46,7 @@ trait ResponseHydratorTrait
             /**
              * accessor are informative Boxalino system variables which have no value to the integration system
              */
-            if($value === ['accessor'] || $value === "accessor")
+            if($value === [AccessorInterface::BOXALINO_API_ACCESSOR_PARAMETER] || $value === AccessorInterface::BOXALINO_API_ACCESSOR_PARAMETER)
             {
                 continue;
             }
@@ -69,6 +76,19 @@ trait ResponseHydratorTrait
 
                 if(is_array($value))
                 {
+                    /** the bx-sort is returned as a list/[] instead of a model itself */
+                    if($propertyName === 'bx-sort')
+                    {
+                        foreach($value as $valueOption)
+                        {
+                            $handler = $this->getAccessorHandler()->getAccessor($propertyName);
+                            $valueObject = $this->toObject($valueOption, $handler);
+                            $object->add($objectProperty, $valueObject);
+                        }
+
+                        continue;
+                    }
+
                     $value = array_pop($value);
                 }
                 $valueObject = $this->toObject($value, $handler);

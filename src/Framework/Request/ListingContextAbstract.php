@@ -1,12 +1,11 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Request;
 
-use Boxalino\RealTimeUserExperienceApi\Framework\Content\Listing\ApiFacetModelAbstract;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Context\ListingContextInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\WrongDependencyTypeException;
 
 /**
  * Boxalino Listing Request handler
@@ -30,6 +29,7 @@ abstract class ListingContextAbstract
         parent::get($request);
         $this->addFacets($request);
         $this->addRangeFacets($request);
+        $this->addCategoryFacet($request);
 
         return $this->getApiRequest();
     }
@@ -44,18 +44,24 @@ abstract class ListingContextAbstract
     {
         foreach($request->getParams() as $param => $values)
         {
-            //it`s a store property - has the allowed filters prefix
-            if(strpos((string)$param, $this->getFacetPrefix())===0)
+            if (in_array($param, array_column($this->getRangeProperties(), "from")))
             {
-                if (in_array($param, array_keys($this->getRangeProperties())))
-                {
-                    continue;
-                }
+                continue;
+            }
+
+            if(in_array($param, $this->getSystemParameters()))
+            {
+                continue;
+            }
+
+            //it`s a store property or has the allowed filters prefix
+            if($this->isParamAllowedAsFilter((string)$param))
+            {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
                 $values = array_map("html_entity_decode", $values);
                 $this->getApiRequest()->addFacets(
                     $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues(substr($param, strlen($this->getFacetPrefix()), strlen($param)), $values)
+                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix((string)$param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey(), $this->getFacetValueCorrelation())
                 );
             }
         }
@@ -73,18 +79,62 @@ abstract class ListingContextAbstract
     {
         foreach($this->getRangeProperties() as $propertyName=>$configurations)
         {
-            $from = (int) $request->getParam($configurations['from'], 0);
-            $to = (int) $request->getParam($configurations['to'], 0);
-            if($from > 0 || $to > 0)
+            try{
+                $from = (float) $request->getParam($configurations['from'], 0);
+                $to = (float) $request->getParam($configurations['to'], 0);
+                if($from > 0 || $to > 0)
+                {
+                    $this->getApiRequest()->addFacets(
+                        $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
+                            ->addRange($propertyName, $from, $to)
+                    );
+                }
+            } catch (\Throwable $exception)
             {
-                $this->getApiRequest()->addFacets(
-                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addRange($propertyName, $from, $to)
-                );
+                //do nothing, maybe an issue in definition of the range properties?
             }
         }
 
         return $this;
+    }
+
+    /**
+     * Adding the categories facet to the API request
+     *
+     * @param RequestInterface $request
+     * @return ListingContextAbstract
+     */
+    public function addCategoryFacet(RequestInterface $request) : ListingContextAbstract
+    {
+        if($this->useCategoriesFilter)
+        {
+            $this->getApiRequest()->addFacets(
+                $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
+                    ->add("categories", -1, 1, $this->getFacetValueCorrelation())
+            );
+        }
+
+        return $this;
+    }
+
+
+    /**
+     * @param string $param
+     * @return bool
+     */
+    protected function isParamAllowedAsFilter(string $param)
+    {
+        $allowedAsFilter = in_array($param, $this->getFilterablePropertyNames()) || !$this->getFacetPrefix();
+
+        if($this->getFacetPrefix())
+        {
+            if(strpos((string)$param, $this->getFacetPrefix()) === 0)
+            {
+                $allowedAsFilter = true;
+            }
+        }
+
+        return $allowedAsFilter;
     }
 
     /**
@@ -96,10 +146,77 @@ abstract class ListingContextAbstract
 
     /**
      * Delimiter for the filter values in the URL
+     * RULE: must be the same as the one used in facet model (if exists)
      *
      * @return string
      */
     abstract public function getFilterValuesDelimiter() : string;
+
+    /**
+     * Environment-specific generic request properties (ex: sorting, page nr, limit, etc)
+     *
+     * @return array
+     */
+    abstract public function getSystemParameters() : array;
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function addFilterByFacetOptionId(bool $value) : ListingContextInterface
+    {
+        $this->useFilterByFacetOptionId = $value;
+        return $this;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function addFilterByFacetUrlKey(bool $value) : ListingContextInterface
+    {
+        $this->useFilterByUrlKey = $value;
+        return $this;
+    }
+
+    /**
+     * @param string $value
+     * @return $this
+     */
+    public function addFilterByFacetValueKey(string $value) : ListingContextInterface
+    {
+        $this->facetValueKeyFilter = $value;
+        return $this;
+    }
+
+    /**
+     * @param bool $value
+     * @return $this
+     */
+    public function addCategoriesFilter(bool $value) : ListingContextInterface
+    {
+        $this->useCategoriesFilter = $value;
+        return $this;
+    }
+
+    /**
+     * Returns the configured valueKey for the integration use-case
+     * @return string|null
+     */
+    protected function getFacetValueKey() : ?string
+    {
+        if($this->useFilterByFacetOptionId)
+        {
+            return FacetDefinition::BOXALINO_REQUEST_FACET_VALUEKEY;
+        }
+
+        return $this->facetValueKeyFilter;
+    }
+
+    /**
+     * @return array
+     */
+    abstract public function getFilterablePropertyNames() : array;
 
 
 }

@@ -47,6 +47,11 @@
                 <argument>Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Block</argument>
             </call>
             <call method="addAccessor">
+                <argument>correlations</argument>
+                <argument>correlations</argument>
+                <argument>Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\Correlation</argument>
+            </call>
+            <call method="addAccessor">
                 <argument>bx-hits</argument>
                 <argument>bxHits</argument>
                 <argument>Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\BxAccessor</argument>
