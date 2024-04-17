@@ -3,7 +3,7 @@
     "description": "Boxalino Real Time User Experience (RTUX) API",
     "license": "MIT",
     "keywords": ["boxalino", "api", "real-time user experience"],
-    "version": "4.0.1",
+    "version": "4.0.2",
     "authors": [
         {
             "name": "Boxalino AG",
@@ -21,8 +21,8 @@
     },
     "require": {
         "php": ">=7.4",
-        "symfony/dependency-injection": "^4.0 || ^5.0",
-        "symfony/http-kernel": "^4.4 || ^5.1.6",
+        "symfony/dependency-injection": "^4.0|5.0^|^6.4|^7.0",
+        "symfony/http-kernel": "^4.4 || ^5.1.6 || ^6.0 || ^7.0",
         "symfony/monolog-bundle": "^3.0",
         "psr/log": "~1.1 || ^2 || ^3",
         "guzzlehttp/guzzle": "~6|^7.0",
