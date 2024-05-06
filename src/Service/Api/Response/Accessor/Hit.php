@@ -8,6 +8,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor
  */
+#[\AllowDynamicProperties]
 class Hit extends Accessor
     implements AccessorInterface
 {

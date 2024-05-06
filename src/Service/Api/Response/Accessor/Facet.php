@@ -10,6 +10,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor
  */
+#[\AllowDynamicProperties]
 class Facet extends Accessor
     implements AccessorInterface
 {

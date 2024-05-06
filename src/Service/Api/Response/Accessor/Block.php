@@ -9,6 +9,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\WrongDependencyTypeE
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Accessor
  */
+#[\AllowDynamicProperties]
 class Block extends Accessor
     implements BlockInterface
 {
