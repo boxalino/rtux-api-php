@@ -267,7 +267,7 @@ trait FacetHierarchicalTrait
                 ksort($facetValuesByKey, SORT_NATURAL);
             } else {
                 ksort($facetValuesByKey[true], SORT_NATURAL);
-                ksort($facetValuesByKeyy[false], SORT_NATURAL);
+                ksort($facetValuesByKey[false], SORT_NATURAL);
             }
         }
     }
