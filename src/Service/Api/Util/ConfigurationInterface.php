@@ -13,6 +13,8 @@ interface ConfigurationInterface
     public const RTUX_API_ENDPOINT_STAGE="https://r-st.%%domain%%.com/narrative/%%account%%/api/1";
     public const BOXALINO_API_TRACKING_PRODUCTION="//track.bx-cloud.com/static/bav2.min.js";
     public const BOXALINO_API_TRACKING_STAGE="//r-st.bx-cloud.com/static/bav2.min.js";
+    public const BOXALINO_API_RTI_PRODUCTION="//track.bx-cloud.com/static/rti.min.js";
+    public const BOXALINO_API_RTI_STAGE="//r-st.bx-cloud.com/static/rti.min.js";
     public const BOXALINO_API_SERVER_PRODUCTION="//track.bx-cloud.com/track/v2";
     public const BOXALINO_API_SERVER_STAGE="//r-st.bx-cloud.com/track/v2";
     public const RTUX_API_DOMAIN_MAIN="bx-cloud";
