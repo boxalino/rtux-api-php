@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Request;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterFactoryInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\ParameterInterface;
@@ -132,6 +133,7 @@ abstract class ContextAbstract
             ->setGroupBy($this->getGroupBy())
             ->setWidget($this->getWidget());
 
+        $this->addCorrelations($request);
         $this->addFilters($request);
         $this->addContextParameters($request);
         $this->addSort($request);
@@ -159,6 +161,34 @@ abstract class ContextAbstract
     public function addSort(RequestInterface $request) : void
     {
         return;
+    }
+
+    /**
+     * Adding a correlation on the request
+     * Redefine in a context that allows flexible update of the request
+     *
+     * ex: $this->getApiRequest()->addCorrelations($this->getCategoriesCorrelation($request));
+     *
+     * @param RequestInterface $request
+     */
+    public function addCorrelations(RequestInterface $request) : void
+    {
+        return;
+    }
+
+    /**
+     * Sample on how to generate a correlation definition element
+     * to be added in the API request
+     *
+     * Review Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition
+     *
+     * @param RequestInterface $request
+     * @return CorrelationDefinition
+     */
+    protected function getCategoriesCorrelation(RequestInterface $request) : CorrelationDefinition
+    {
+        return $this->getParameterFactory()->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_CORRELATION)
+            ->add("categories");
     }
 
     /**

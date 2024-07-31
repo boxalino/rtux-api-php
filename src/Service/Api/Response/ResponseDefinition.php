@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
  *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Response
  */
+#[\AllowDynamicProperties]
 class ResponseDefinition implements ResponseDefinitionInterface
 {
 
@@ -52,6 +53,11 @@ class ResponseDefinition implements ResponseDefinitionInterface
      * @var null | \ArrayIterator
      */
     protected $blocks = null;
+
+    /**
+     * @var null | \ArrayIterator
+     */
+    protected $correlations = null;
 
     /**
      * @var null | \ArrayIterator
@@ -114,7 +120,7 @@ class ResponseDefinition implements ResponseDefinitionInterface
                 {
                     return $this->get()->system->mainHitCount;
                 }
-                
+
                 throw new UndefinedPropertyError("BoxalinoAPI Logical Branch switch.");
             } catch(UndefinedPropertyError $exception)
             {
@@ -298,6 +304,37 @@ class ResponseDefinition implements ResponseDefinitionInterface
     }
 
     /**
+     * @return \ArrayIterator
+     */
+    public function getCorrelations() : \ArrayIterator
+    {
+        if(is_null($this->correlations))
+        {
+            $this->correlations = new \ArrayIterator();
+            if(is_null($this->get()))
+            {
+                return $this->correlations;
+            }
+
+            try{
+                $type = ResponseDefinitionInterface::BOXALINO_PARAMETER_CORRELATIONS;
+                if(property_exists($this->get(), $type))
+                {
+                    foreach($this->get()->$type as $correlation)
+                    {
+                        $this->correlations->append($this->toObject($correlation, $this->getAccessorHandler()->getAccessor($type)));
+                    }
+                }
+            } catch (\Throwable $exception)
+            {
+                $this->log("BoxalinoResponseAPI: Something when wrong when accessing the $type. Error :" . $exception->getMessage());
+            }
+        }
+
+        return $this->correlations;
+    }
+
+    /**
      * @param string $type
      * @return \ArrayIterator
      */
@@ -422,10 +459,12 @@ class ResponseDefinition implements ResponseDefinitionInterface
             {
                 return $this->get()->advanced->$index->$property;
             }
-        } catch(\Throwable $exception) {}
 
-        return null;
-        
+            return null;
+        } catch(\Throwable $exception)
+        {
+            return null;
+        }
     }
 
     /**

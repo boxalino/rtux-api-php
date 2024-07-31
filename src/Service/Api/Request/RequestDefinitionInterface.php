@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Request;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FilterDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\HeaderParameterDefinition;
@@ -50,14 +51,20 @@ interface RequestDefinitionInterface extends \JsonSerializable
     public function addFacets(FacetDefinition ...$facetDefinitions) : RequestDefinitionInterface;
 
     /**
+     * @param CorrelationDefinition ...$correlationDefinitions
+     * @return RequestDefinitionInterface
+     */
+    public function addCorrelations(CorrelationDefinition ...$correlationDefinitions) : RequestDefinitionInterface;
+
+    /**
      * @param HeaderParameterDefinition ...$headerParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addHeaderParameters(HeaderParameterDefinition ...$headerParameterDefinitions);
 
     /**
      * @param UserParameterDefinition ...$userParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addParameters(UserParameterDefinition ...$userParameterDefinitions);
 

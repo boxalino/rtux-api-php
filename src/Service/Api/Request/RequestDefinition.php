@@ -1,6 +1,7 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Request;
 
+use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FacetDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FilterDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\HeaderParameterDefinition;
@@ -115,6 +116,11 @@ class RequestDefinition implements RequestDefinitionInterface
     protected $parameters = [];
 
     /**
+     * @var array
+     */
+    protected $correlations = [];
+
+    /**
      * @param FilterDefinition ...$filterDefinitions
      * @return RequestDefinitionInterface
      */
@@ -174,6 +180,19 @@ class RequestDefinition implements RequestDefinitionInterface
     {
         foreach ($userParameterDefinitions as $parameter) {
             $this->parameters = array_merge($this->parameters, $parameter->toArray());
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param CorrelationDefinition ...$correlationDefinitions
+     * @return RequestDefinitionInterface
+     */
+    public function addCorrelations(CorrelationDefinition ...$correlationDefinitions) : RequestDefinitionInterface
+    {
+        foreach ($correlationDefinitions as $correlation) {
+            $this->correlations[] = $correlation->toArray();
         }
 
         return $this;
@@ -472,6 +491,14 @@ class RequestDefinition implements RequestDefinitionInterface
     {
         $this->parameters = $parameters;
         return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCorrelations(): array
+    {
+        return $this->correlations;
     }
 
     /**

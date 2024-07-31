@@ -26,6 +26,8 @@
                  parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
         <service id="boxalino.api.request.parameter.item" class="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\ItemDefinition"
                  parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
+        <service id="boxalino.api.request.parameter.correlation" class="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\CorrelationDefinition"
+                 parent="boxalino.api.request.parameter.definition" public="true" shared="false"/>
 
         <service id="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInterface"
                  class="Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinition"/>

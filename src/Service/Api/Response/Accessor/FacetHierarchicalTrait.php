@@ -47,7 +47,7 @@ trait FacetHierarchicalTrait
     }
 
     /**
-     * @param array $values
+     * @param $value
      * @param int $level
      * @param string|null $parentId
      * @return void
@@ -267,7 +267,7 @@ trait FacetHierarchicalTrait
                 ksort($facetValuesByKey, SORT_NATURAL);
             } else {
                 ksort($facetValuesByKey[true], SORT_NATURAL);
-                ksort($facetValuesByKeyy[false], SORT_NATURAL);
+                ksort($facetValuesByKey[false], SORT_NATURAL);
             }
         }
     }
