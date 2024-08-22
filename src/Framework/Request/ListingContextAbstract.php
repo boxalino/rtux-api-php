@@ -129,7 +129,7 @@ abstract class ListingContextAbstract
         {
             $this->getApiRequest()->addFacets(
                 $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                    ->add("categories", -1, 1, $this->getFacetValueCorrelation())
+                    ->add("categories", -1, 1, $this->getFacetValueCorrelation(), $this->getFacetRequestProperties("categories"))
             );
         }
 
