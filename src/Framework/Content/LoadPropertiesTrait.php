@@ -1,9 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Content;
 
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
-
 /**
  * Trait LoadPropertiesTrait
  *
@@ -80,7 +77,7 @@ trait LoadPropertiesTrait
     public function getDefaultFunctionsToIgnoreForElementLoad() : array
     {
         return [
-            "addAccessorContext", "getAccessorHandler", "load", "__construct", "toObject",
+            "addAccessorContext", "getAccessorHandler", "load", "__construct", "toObject", "__sleep",
             "findObjectWithProperty", "getDefaultFunctionsToIgnoreForElementLoad", "getDefaultPropertiesToIgnoreForElementLoad"
         ];
     }

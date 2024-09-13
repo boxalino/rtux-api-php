@@ -676,4 +676,5 @@ class Facet extends Accessor
         return $this->resetOnRemove;
     }
 
+
 }

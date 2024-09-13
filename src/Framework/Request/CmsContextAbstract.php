@@ -78,8 +78,10 @@ abstract class CmsContextAbstract
                     continue;
                 }
                 $this->getApiRequest()->addFacets(
-                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues($params[0], array_map("html_entity_decode",  explode("|", $params[1])))
+                    $this->_getApiRequestFacet(
+                        $params[0],
+                        array_map("html_entity_decode",  explode("|", $params[1]))
+                    )
                 );
             }
         }

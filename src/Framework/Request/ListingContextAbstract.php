@@ -58,15 +58,34 @@ abstract class ListingContextAbstract
             if($this->isParamAllowedAsFilter((string)$param))
             {
                 $values = is_array($values) ? $values : explode($this->getFilterValuesDelimiter(), $values);
-                $values = array_map("html_entity_decode", $values);
                 $this->getApiRequest()->addFacets(
-                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                        ->addWithValues($this->getPropertyNameWithoutFacetPrefix((string)$param), $values, $this->useFilterByUrlKey, $this->getFacetValueKey(), $this->getFacetValueCorrelation())
+                    $this->_getApiRequestFacet(
+                        $this->getPropertyNameWithoutFacetPrefix((string)$param),
+                        array_map("html_entity_decode", $values)
+                    )
                 );
             }
         }
 
         return $this;
+    }
+
+    /**
+     * @param string $propertyName
+     * @param array $values
+     * @return FacetDefinition
+     */
+    protected function _getApiRequestFacet(string $propertyName, array $values) : FacetDefinition
+    {
+        return $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
+            ->addWithValues(
+                $propertyName,
+                $values,
+                $this->useFilterByUrlKey,
+                $this->getFacetValueKey(),
+                $this->getFacetValueCorrelation(),
+                $this->getFacetRequestProperties($propertyName)
+            );
     }
 
     /**
@@ -110,13 +129,12 @@ abstract class ListingContextAbstract
         {
             $this->getApiRequest()->addFacets(
                 $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_FACET)
-                    ->add("categories", -1, 1, $this->getFacetValueCorrelation())
+                    ->add("categories", -1, 1, $this->getFacetValueCorrelation(), $this->getFacetRequestProperties("categories"))
             );
         }
 
         return $this;
     }
-
 
     /**
      * @param string $param
@@ -135,6 +153,20 @@ abstract class ListingContextAbstract
         }
 
         return $allowedAsFilter;
+    }
+
+    /**
+     * Function to be rewritten based on client integration
+     * (either set different properties based on the product attribute or set general ones: key->value)
+     * Review documentation for available options
+     * https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/8749643/Narrative+API+-+Technical+Reference#Facets-Request-Parameters
+     *
+     * @param string $propertyName
+     * @return array
+     */
+    public function getFacetRequestProperties(string $propertyName) : array
+    {
+        return [];
     }
 
     /**
