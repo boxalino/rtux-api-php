@@ -32,7 +32,7 @@ abstract class ItemContextAbstract
     /**
      * @var string
      */
-    protected $productId;
+    protected $productId = null;
 
     /**
      * @var array
@@ -62,16 +62,22 @@ abstract class ItemContextAbstract
     {
         if(!$this->productId)
         {
-            throw new MissingDependencyException(
-                "BoxalinoAPI: the product ID is required on a ProductRecommendation context"
-            );
+            if(empty($this->getContents()) || empty($this->getSubProductIds()))
+            {
+                throw new MissingDependencyException(
+                    "BoxalinoAPI: the product ID / subproducts / content items is required on a ItemContext API request."
+                );
+            }
         }
         parent::get($request);
-        $this->getApiRequest()
-            ->addItems(
-                $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_ITEM)
-                    ->add($this->getItemGroupBy(), $this->getProductId())
-            );
+        if($this->getProductId())
+        {
+            $this->getApiRequest()
+                ->addItems(
+                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_ITEM)
+                        ->add($this->getItemGroupBy(), $this->getProductId())
+                );
+        }
 
         /**
          * setting subProduct elements (ex: for basket requests)
@@ -120,9 +126,9 @@ abstract class ItemContextAbstract
     }
 
     /**
-     * @return string
+     * @return string | null
      */
-    public function getProductId() : string
+    public function getProductId() : ?string
     {
         return $this->productId;
     }
