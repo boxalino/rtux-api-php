@@ -50,6 +50,11 @@ abstract class ItemContextAbstract
     protected $subProductIds = [];
 
     /**
+     * @var array
+     */
+    protected $contents = [];
+
+    /**
      * @param RequestInterface $request
      * @return RequestDefinitionInterface
      */
@@ -77,6 +82,15 @@ abstract class ItemContextAbstract
                 ->addItems(
                     $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_ITEM)
                         ->add($this->getItemGroupBy(), $subProductId, "subProduct")
+                );
+        }
+
+        foreach($this->getContents() as $content)
+        {
+            $this->getApiRequest()
+                ->addItems(
+                    $this->parameterFactory->get(ParameterFactoryInterface::BOXALINO_API_REQUEST_PARAMETER_TYPE_ITEM)
+                        ->add($content["field"], $content["value"], $content["role"], $content["indexId"])
                 );
         }
 
@@ -163,6 +177,45 @@ abstract class ItemContextAbstract
     {
         $this->subProductIds[] = $id;
         return $this;
+    }
+
+    /**
+     * Must have keys: value
+     * Additional keys: role, field, indexId
+     *
+     * https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/8749643/Narrative+API+-+Technical+Reference#UP-SELL-%2F-CROSS-SELL-REQUEST
+     *
+     * @param array $content
+     * @return $this
+     */
+    public function addContent(array $content)
+    {
+        if(!isset($content["field"]))
+        {
+            $content["field"] = $this->getItemGroupBy();
+        }
+
+        if(!isset($content["role"]))
+        {
+            $content["role"] = count($this->contents) ? "subProduct" : "mainProduct";
+        }
+
+        if(!isset($content["indexId"]))
+        {
+            $index = $this->getApiRequest()->isDev() ? $this->getApiRequest()->getUsername() . "_dev" : $this->getApiRequest()->getUsername();
+            $content["indexId"] = $index . "_content";
+        }
+
+        $this->contents[] = $content;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getContents() : array
+    {
+        return $this->contents;
     }
 
     /**
