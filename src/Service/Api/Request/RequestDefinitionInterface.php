@@ -28,6 +28,11 @@ interface RequestDefinitionInterface extends \JsonSerializable
     public const BOXALINO_API_WIDGET_INSPECT_FLAG="_bx_inspect_widget";
 
     /**
+     * URL parameter to change view mode in "test:true"
+     */
+    public const BOXALINO_API_TEST_INSPECT_FLAG="_bx_inspect_test";
+
+    /**
      * @param FilterDefinition ...$filterDefinitions
      * @return $this
      */
@@ -47,19 +52,19 @@ interface RequestDefinitionInterface extends \JsonSerializable
 
     /**
      * @param CorrelationDefinition ...$correlationDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addCorrelations(CorrelationDefinition ...$correlationDefinitions) : RequestDefinitionInterface;
 
     /**
      * @param HeaderParameterDefinition ...$headerParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addHeaderParameters(HeaderParameterDefinition ...$headerParameterDefinitions);
 
     /**
      * @param UserParameterDefinition ...$userParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addParameters(UserParameterDefinition ...$userParameterDefinitions);
 
@@ -176,9 +181,24 @@ interface RequestDefinitionInterface extends \JsonSerializable
     public function getApiKey() : string;
 
     /**
+     * @return string
+     */
+    public function getUsername() : string;
+
+    /**
+     * @return bool
+     */
+    public function isDev() : bool;
+
+    /**
      * @return bool
      */
     public function isInspectMode() : bool;
+
+    /**
+     * @return bool
+     */
+    public function isTestInspectMode() : bool;
 
     /**
      * @return string

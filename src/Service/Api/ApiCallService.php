@@ -20,7 +20,12 @@ class ApiCallService implements ApiCallServiceInterface
     /**
      * @var Client
      */
-    private $restClient;
+    protected $restClient;
+
+    /**
+     * @var bool
+     */
+    protected $compress = false;
 
     /**
      * @var ResponseDefinition
@@ -54,7 +59,6 @@ class ApiCallService implements ApiCallServiceInterface
      */
     public function __construct(LoggerInterface $logger, ResponseDefinitionInterface $responseDefinition)
     {
-        $this->restClient = new Client();
         $this->logger = $logger;
         $this->responseDefinition = $responseDefinition;
     }
@@ -68,7 +72,9 @@ class ApiCallService implements ApiCallServiceInterface
     {
         try {
             $this->responseDefinition->reset();
+            $this->updateApiRequestOptions($apiRequest);
             $this->setFallback(false);
+
             $request = new Request(
                 'POST',
                 $this->getApiEndpoint($restApiEndpoint, $apiRequest->getProfileId()),
@@ -85,23 +91,47 @@ class ApiCallService implements ApiCallServiceInterface
             }
 
             /** @var  \GuzzleHttp\Psr7\Response $response */
-            $response = $this->restClient->send($request);
+            $response = $this->getRestClient()->send($request);
             $this->setApiResponse($this->responseDefinition->setResponse($response));
 
             /** in case of successfull request & the request is done in inspect-mode - log both the API request & API response */
             $this->addInspect($apiRequest, $restApiEndpoint);
 
             return $this->getApiResponse();
-        } catch (\Exception $exception)
+        } catch (\Throwable $exception)
         {
             $this->setFallback(true);
-            $this->setFallbackMessage($exception->getMessage());
-            $this->logger->error("BoxalinoAPIError: " . $exception->getMessage() . " at " . __CLASS__
+            $message = $exception->getMessage();
+            if($exception instanceof \GuzzleHttp\Exception\ClientException)
+            {
+                $message = $exception->getResponse()->getBody()->getContents();
+            }
+            $this->setFallbackMessage($message);
+            $this->logger->error("BoxalinoAPIError: " . $message . " at " . __CLASS__
                 . " on request: " . $apiRequest->jsonSerialize()
             );
         }
 
         return null;
+    }
+
+    /**
+     * @return Client
+     */
+    public function getRestClient() : Client
+    {
+        if(!$this->restClient)
+        {
+            $options = [];
+            if($this->isCompress())
+            {
+                $options = ['decode_content' => 'gzip'];
+            }
+
+            $this->restClient = new Client($options);
+        }
+
+        return $this->restClient;
     }
 
     /**
@@ -123,6 +153,31 @@ class ApiCallService implements ApiCallServiceInterface
     }
 
     /**
+     * @param RequestDefinitionInterface $apiRequest
+     * @return $this
+     */
+    public function updateApiRequestOptions(RequestDefinitionInterface &$apiRequest) : self
+    {
+        $this->viewAsTest($apiRequest);
+
+        return $this;
+    }
+
+    /**
+     * @param RequestDefinitionInterface $apiRequest
+     * @return self
+     */
+    protected function viewAsTest(RequestDefinitionInterface &$apiRequest) : self
+    {
+        if($apiRequest->isTestInspectMode())
+        {
+            $apiRequest->setTest(true);
+        }
+
+        return $this;
+    }
+
+    /**
      * @param string $restApiEndpoint
      * @param string $profileId
      * @return string
@@ -130,6 +185,24 @@ class ApiCallService implements ApiCallServiceInterface
     public function getApiEndpoint(string $restApiEndpoint, string $profileId)
     {
         return stripslashes($restApiEndpoint) . "?profileId=$profileId";
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCompress(): bool
+    {
+        return $this->compress;
+    }
+
+    /**
+     * @param bool $compress
+     * @return self
+     */
+    public function setCompress(bool $compress): self
+    {
+        $this->compress = $compress;
+        return $this;
     }
 
     /**

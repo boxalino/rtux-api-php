@@ -1,9 +1,6 @@
 <?php declare(strict_types=1);
 namespace Boxalino\RealTimeUserExperienceApi\Framework\Content;
 
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorInterface;
-use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorModelInterface;
-
 /**
  * Trait LoadPropertiesTrait
  *

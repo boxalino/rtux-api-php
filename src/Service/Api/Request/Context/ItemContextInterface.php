@@ -40,4 +40,11 @@ interface ItemContextInterface extends ContextInterface
      */
     public function addSubProduct(string $id);
 
+    /**
+     * @param array $content
+     * @return mixed
+     */
+    public function addContent(array $content);
+
+
 }
