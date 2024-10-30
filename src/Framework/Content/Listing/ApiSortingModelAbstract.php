@@ -143,7 +143,7 @@ abstract class ApiSortingModelAbstract
      * Adds additional sorting options linked to a selected sorting option
      * (explicit structure)
      *
-     * @param array $sortingOptionsList
+     * @param array $additionalSortingList
      * @return $this
      */
     public function addAdditionalSortingOptionCollection(array $additionalSortingList) : self

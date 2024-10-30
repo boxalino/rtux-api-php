@@ -17,14 +17,20 @@ class ItemDefinition extends ParameterDefinition
      * @param string $field
      * @param string $value
      * @param string $role
+     * @param string | null $indexId
      * @return $this
      */
-    public function add(string $field, string $value, string $role="mainProduct") : self
+    public function add(string $field, string $value, string $role="mainProduct", ?string $indexId = null) : self
     {
         $this->field = $field;
         $this->value = $value;
         $this->role = $role;
+        if(is_null($indexId))
+        {
+            return $this;
+        }
 
+        $this->indexId = $indexId;
         return $this;
     }
 

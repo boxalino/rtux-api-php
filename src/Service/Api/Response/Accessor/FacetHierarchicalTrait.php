@@ -2,7 +2,7 @@
 namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
 
 /**
- * Class Facet
+ * Trait FacetHierarchicalTrait
  *
  * Boxalino API facet model
  * The properties defined are a base on what can be configured in Boxalino Intelligence Admin
@@ -267,7 +267,7 @@ trait FacetHierarchicalTrait
                 ksort($facetValuesByKey, SORT_NATURAL);
             } else {
                 ksort($facetValuesByKey[true], SORT_NATURAL);
-                ksort($facetValuesByKeyy[false], SORT_NATURAL);
+                ksort($facetValuesByKey[false], SORT_NATURAL);
             }
         }
     }
