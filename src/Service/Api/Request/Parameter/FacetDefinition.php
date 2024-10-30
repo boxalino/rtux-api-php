@@ -30,14 +30,23 @@ class FacetDefinition extends ParameterDefinition
      * @param array $values
      * @param bool $urlField
      * @param string|null $valueKey
+     * @param array $properties
      * @return FacetDefinition
      */
-    public function addWithValues(string $field, array $values, bool $urlField = false, ?string $valueKey = null, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX) : self
+    public function addWithValues(string $field, array $values, bool $urlField = false,
+                                  ?string $valueKey = null,
+                                  ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX,
+                                  array $properties = []
+    ) : self
     {
         $this->field = $field;
         $this->urlField = $urlField;
         $this->values = $values;
         $this->valueKey = $valueKey;
+        foreach($properties as $fProp => $pValue)
+        {
+            $this->$fProp = (string)$pValue;
+        }
         $this->addExtraInfo("facet-value-correlation", $facetValueCorrelation);
 
         return $this;
@@ -75,12 +84,19 @@ class FacetDefinition extends ParameterDefinition
      * @param int $maxCount
      * @param int $minPopulation
      * @param string|null $facetValueCorrelation
+     * @param array $properties
      * @param string $sort
      * @param bool $sortAscending
      * @param bool $andSelectedValues
      * @return $this
      */
-    public function add(string $field, int $maxCount = -1, int $minPopulation = 1, ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX, string $sort = self::BOXALINO_REQUEST_FACET_SORT_COUNT, bool $sortAscending = false, bool $andSelectedValues = false) : self
+    public function add(string $field, int $maxCount = -1, int $minPopulation = 1,
+                        ?string $facetValueCorrelation = self::BOXALINO_REQUEST_FACET_VALUE_CORRELATION_RTUX,
+                        array $properties = [],
+                        string $sort = self::BOXALINO_REQUEST_FACET_SORT_COUNT,
+                        bool $sortAscending = false,
+                        bool $andSelectedValues = false
+    ) : self
     {
         $this->field = $field;
         $this->maxCount = $maxCount;
@@ -92,6 +108,11 @@ class FacetDefinition extends ParameterDefinition
         }
         $this->sortAscending = $sortAscending;
         $this->andSelectedValues = $andSelectedValues;
+        foreach($properties as $fProp => $pValue)
+        {
+            $this->$fProp = (string)$pValue;
+        }
+
         $this->addExtraInfo("facet-value-correlation", $facetValueCorrelation);
 
         return $this;

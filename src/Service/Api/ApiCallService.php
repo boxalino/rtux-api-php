@@ -101,8 +101,13 @@ class ApiCallService implements ApiCallServiceInterface
         } catch (\Throwable $exception)
         {
             $this->setFallback(true);
-            $this->setFallbackMessage($exception->getMessage());
-            $this->logger->error("BoxalinoAPIError: " . $exception->getMessage() . " at " . __CLASS__
+            $message = $exception->getMessage();
+            if($exception instanceof \GuzzleHttp\Exception\ClientException)
+            {
+                $message = $exception->getResponse()->getBody()->getContents();
+            }
+            $this->setFallbackMessage($message);
+            $this->logger->error("BoxalinoAPIError: " . $message . " at " . __CLASS__
                 . " on request: " . $apiRequest->jsonSerialize()
             );
         }
