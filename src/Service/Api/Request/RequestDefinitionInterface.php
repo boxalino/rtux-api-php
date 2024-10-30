@@ -181,6 +181,16 @@ interface RequestDefinitionInterface extends \JsonSerializable
     public function getApiKey() : string;
 
     /**
+     * @return string
+     */
+    public function getUsername() : string;
+
+    /**
+     * @return bool
+     */
+    public function isDev() : bool;
+
+    /**
      * @return bool
      */
     public function isInspectMode() : bool;

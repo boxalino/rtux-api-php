@@ -9,7 +9,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Util;
  */
 interface ConfigurationInterface
 {
-    public const RTUX_API_ENDPOINT_PRODUCTION="https://main.%%domain%%.com/narrative/%%account%%/api/1";
+    public const RTUX_API_ENDPOINT_PRODUCTION="https://main-gw1.wi-platform-cloud.com/narrative/%%account%%/api/1";
     public const RTUX_API_ENDPOINT_STAGE="https://r-st.%%domain%%.com/narrative/%%account%%/api/1";
     public const BOXALINO_API_TRACKING_PRODUCTION="//bx-cdn.com/static/bav2.min.js";
     public const BOXALINO_API_TRACKING_STAGE="//r-st.bx-cloud.com/static/bav2.min.js";
