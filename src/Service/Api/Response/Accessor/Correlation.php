@@ -4,7 +4,7 @@ namespace Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor;
 /**
  * Class Correlation
  * Model for the API response of correlations
- * 
+ *
  * @package Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor
  */
 class Correlation extends Accessor

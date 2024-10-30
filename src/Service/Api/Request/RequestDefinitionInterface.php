@@ -46,25 +46,25 @@ interface RequestDefinitionInterface extends \JsonSerializable
 
     /**
      * @param FacetDefinition ...$facetDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addFacets(FacetDefinition ...$facetDefinitions) : RequestDefinitionInterface;
 
     /**
      * @param CorrelationDefinition ...$correlationDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addCorrelations(CorrelationDefinition ...$correlationDefinitions) : RequestDefinitionInterface;
 
     /**
      * @param HeaderParameterDefinition ...$headerParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addHeaderParameters(HeaderParameterDefinition ...$headerParameterDefinitions);
 
     /**
      * @param UserParameterDefinition ...$userParameterDefinitions
-     * @return $this
+     * @return RequestDefinitionInterface
      */
     public function addParameters(UserParameterDefinition ...$userParameterDefinitions);
 
@@ -179,6 +179,16 @@ interface RequestDefinitionInterface extends \JsonSerializable
      * @return string
      */
     public function getApiKey() : string;
+
+    /**
+     * @return string
+     */
+    public function getUsername() : string;
+
+    /**
+     * @return bool
+     */
+    public function isDev() : bool;
 
     /**
      * @return bool

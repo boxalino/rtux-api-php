@@ -138,6 +138,20 @@ abstract class ListingContextAbstract
     }
 
     /**
+     * Function to be rewritten based on client integration
+     * (either set different properties based on the product attribute or set general ones: key->value)
+     * Review documentation for available options
+     * https://boxalino.atlassian.net/wiki/spaces/BPKB/pages/8749643/Narrative+API+-+Technical+Reference#Facets-Request-Parameters
+     *
+     * @param string $propertyName
+     * @return array
+     */
+    public function getFacetRequestProperties(string $propertyName) : array
+    {
+        return [];
+    }
+
+    /**
      * Range properties definition as used in the projects
      *
      * @return array
