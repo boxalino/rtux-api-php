@@ -62,7 +62,7 @@ abstract class ItemContextAbstract
     {
         if(!$this->productId)
         {
-            if(empty($this->getContents()) && empty($this->getSubProductIds()))
+            if(empty($this->getContents()) || empty($this->getSubProductIds()))
             {
                 throw new MissingDependencyException(
                     "BoxalinoAPI: the product ID / subproducts / content items is required on a ItemContext API request."
