@@ -77,7 +77,6 @@ abstract class CmsContextAbstract
                 {
                     continue;
                 }
-
                 $this->getApiRequest()->addFacets(
                     $this->_getApiRequestFacet(
                         $params[0],

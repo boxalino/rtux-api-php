@@ -43,10 +43,7 @@ class FacetDefinition extends ParameterDefinition
         $this->urlField = $urlField;
         $this->values = $values;
         $this->valueKey = $valueKey;
-        foreach($properties as $fProp => $pValue)
-        {
-            $this->$fProp = (string)$pValue;
-        }
+        $this->_addProperties($properties);
         $this->addExtraInfo("facet-value-correlation", $facetValueCorrelation);
 
         return $this;
@@ -108,11 +105,7 @@ class FacetDefinition extends ParameterDefinition
         }
         $this->sortAscending = $sortAscending;
         $this->andSelectedValues = $andSelectedValues;
-        foreach($properties as $fProp => $pValue)
-        {
-            $this->$fProp = (string)$pValue;
-        }
-
+        $this->_addProperties($properties);
         $this->addExtraInfo("facet-value-correlation", $facetValueCorrelation);
 
         return $this;
@@ -126,6 +119,28 @@ class FacetDefinition extends ParameterDefinition
     public function addExtraInfo(string $key, string $value) : void
     {
         $this->extraInfo[$key] = $value;
+    }
+
+    /**
+     * @param array $properties
+     * @return void
+     */
+    protected function _addProperties(array $properties) : void
+    {
+        foreach($properties as $fProp => $pValue)
+        {
+            if($fProp == 'extra-info')
+            {
+                foreach($pValue as $extraPropName => $extraPropValue)
+                {
+                    $this->addExtraInfo($extraPropName, (string)$extraPropValue);
+                }
+
+                continue;
+            }
+
+            $this->$fProp = (string)$pValue;
+        }
     }
 
 

@@ -208,7 +208,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $apiSecret
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setApiSecret(string $apiSecret) : RequestDefinitionInterface
     {
@@ -244,7 +244,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param bool $test
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setTest(bool $test) : RequestDefinitionInterface
     {
@@ -262,7 +262,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $language
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setLanguage(string $language) : RequestDefinitionInterface
     {
@@ -280,7 +280,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $sessionId
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setSessionId(string $sessionId) : RequestDefinitionInterface
     {
@@ -298,7 +298,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $profileId
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setProfileId(string $profileId) : RequestDefinitionInterface
     {
@@ -316,7 +316,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $customerId
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setCustomerId(string $customerId) : RequestDefinitionInterface
     {
@@ -334,7 +334,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $widget
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setWidget(string $widget) : RequestDefinitionInterface
     {
@@ -352,7 +352,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param int $hitCount
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setHitCount(int $hitCount) : RequestDefinitionInterface
     {
@@ -370,7 +370,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param int $offset
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setOffset(int $offset) : RequestDefinitionInterface
     {
@@ -388,7 +388,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $groupBy
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setGroupBy(string $groupBy) : RequestDefinitionInterface
     {
@@ -424,7 +424,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param array $returnFields
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setReturnFields(array $returnFields) : RequestDefinitionInterface
     {
@@ -439,8 +439,7 @@ class RequestDefinition implements RequestDefinitionInterface
     {
         return $this->sort;
     }
-
-
+	
     /**
      * @return array
      */
@@ -459,7 +458,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param bool $orFilters
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setOrFilters(bool $orFilters) : RequestDefinitionInterface
     {
@@ -485,7 +484,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param array $parameters
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setParameters(array $parameters): RequestDefinitionInterface
     {
@@ -511,7 +510,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $username
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setUsername(string $username) : RequestDefinitionInterface
     {
@@ -529,7 +528,7 @@ class RequestDefinition implements RequestDefinitionInterface
 
     /**
      * @param string $apiKey
-     * @return RequestDefinition
+     * @return RequestDefinitionInterface
      */
     public function setApiKey(string $apiKey) : RequestDefinitionInterface
     {

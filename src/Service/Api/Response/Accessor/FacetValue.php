@@ -112,12 +112,12 @@ class FacetValue extends Accessor
     }
 
     /**
-     * @param array $label
+     * @param array | string $label
      * @return FacetValue
      */
-    public function setLabel(array $label): FacetValue
+    public function setLabel($label): FacetValue
     {
-        $this->label = $label[0] ?? null;
+        $this->label = is_array($label) ? $label[0] : $label;
         return $this;
     }
 
