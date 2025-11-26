@@ -57,6 +57,21 @@ abstract class SearchContextAbstract
 
         return $this->getApiRequest();
     }
+	
+	/**
+	 * Adding general filters
+	 * (updated from main class, to ignore category filter)
+	 *
+	 * @param RequestInterface $request
+	 */
+	protected function addFilters(RequestInterface $request) : void
+	{
+		$this->getApiRequest()
+			->addFilters(
+				$this->getVisibilityFilter($request),
+				$this->getActiveFilter($request)
+			);
+	}
 
     /**
      * @param RequestInterface $request

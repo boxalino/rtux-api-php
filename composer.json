@@ -3,7 +3,7 @@
     "description": "Boxalino Real Time User Experience (RTUX) API",
     "license": "MIT",
     "keywords": ["boxalino", "api", "real-time user experience"],
-    "version": "4.1.6",
+    "version": "4.1.7",
     "authors": [
         {
             "name": "Boxalino AG",
