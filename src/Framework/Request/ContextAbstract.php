@@ -217,7 +217,6 @@ abstract class ContextAbstract
         $this->getApiRequest()
             ->addFilters(
                 $this->getVisibilityFilter($request),
-                $this->getCategoryFilter($request),
                 $this->getActiveFilter($request)
             );
     }

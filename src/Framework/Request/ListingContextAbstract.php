@@ -33,6 +33,21 @@ abstract class ListingContextAbstract
 
         return $this->getApiRequest();
     }
+	
+	/**
+	 * Adding general filters (includes category filter)
+	 *
+	 * @param RequestInterface $request
+	 */
+	protected function addFilters(RequestInterface $request) : void
+	{
+		$this->getApiRequest()
+			->addFilters(
+				$this->getVisibilityFilter($request),
+				$this->getCategoryFilter($request),
+				$this->getActiveFilter($request)
+			);
+	}
 
     /**
      * Filter the list of query parameters by either being a product property or a defined property used in filter
