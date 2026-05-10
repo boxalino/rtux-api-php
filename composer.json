@@ -20,7 +20,7 @@
         }
     },
     "require": {
-        "php": ">=8.4",
+        "php": ">=8.2",
         "symfony/dependency-injection": "^6.4|^7.0",
         "symfony/http-kernel": "^4.4 || ^5.1.6 || ^6.0 || ^7.0",
         "symfony/monolog-bundle": "^3.0",
