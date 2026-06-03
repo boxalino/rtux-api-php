@@ -22,7 +22,7 @@ class ApiCookieSubscriber implements EventSubscriberInterface
 
     public const VISITOR_COOKIE_TIME = 31536000;
 
-    public static function getSubscribedEvents()
+    public static function getSubscribedEvents(): array
     {
         return [
             KernelEvents::RESPONSE => [
