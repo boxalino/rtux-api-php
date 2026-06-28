@@ -59,7 +59,7 @@ abstract class ListingContextAbstract
     {
         foreach($request->getParams() as $param => $values)
         {
-            if (in_array($param, array_column($this->getRangeProperties(), "from")))
+            if (in_array($param, array_merge(array_column($this->getRangeProperties(), "from"), array_column($this->getRangeProperties(), "to"))))
             {
                 continue;
             }
