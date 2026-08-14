@@ -9,6 +9,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestDefinitionInte
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\RequestTransformerInterface;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Response\Accessor\AccessorFacetModelInterface;
+use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
 
 /**
  * Class ContextAbstract
@@ -236,7 +237,16 @@ abstract class ContextAbstract
      */
     public function getWidget() : string
     {
-        return $this->widget;
+	    if(empty($this->widget))
+	    {
+		    throw new MissingDependencyException(
+			    "BoxalinoApiContext: the widget is not set on " . static::class . ". "
+			    . "Declare it in the context constructor (setWidget) or as the block XML `widget` argument "
+			    . "before the API request is made."
+		    );
+	    }
+	    
+	    return $this->widget;
     }
 
     /**

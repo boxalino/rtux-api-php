@@ -7,6 +7,7 @@ use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\FilterDefin
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\HeaderParameterDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\UserParameterDefinition;
 use Boxalino\RealTimeUserExperienceApi\Service\Api\Request\Parameter\SortingDefinition;
+use Boxalino\RealTimeUserExperienceApi\Service\ErrorHandler\MissingDependencyException;
 
 /**
  * Boxalino API Request definition object
@@ -329,7 +330,15 @@ class RequestDefinition implements RequestDefinitionInterface
      */
     public function getWidget(): string
     {
-        return $this->widget;
+	    if(empty($this->widget))
+	    {
+		    throw new MissingDependencyException(
+			    "BoxalinoApiRequest: the widget is not set on the request definition " . static::class . ". "
+			    . "It is expected to be set from the API request context."
+		    );
+	    }
+	    
+	    return $this->widget;
     }
 
     /**
@@ -523,6 +532,14 @@ class RequestDefinition implements RequestDefinitionInterface
      */
     public function getApiKey() : string
     {
+	    if(empty($this->apiKey))
+	    {
+		    throw new MissingDependencyException(
+			    "BoxalinoApiRequest: the API key is not set on the request definition " . static::class . ". "
+			    . "It is expected to be set from the API request context."
+		    );
+	    }
+	    
         return $this->apiKey;
     }
 
